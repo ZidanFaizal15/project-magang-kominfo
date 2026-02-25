@@ -27,6 +27,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Admin routes
 Route::prefix('admin')
     ->middleware(['auth', 'role:admin'])
     ->name('admin.')
@@ -58,16 +59,16 @@ Route::prefix('admin')
             [LaporanController::class,'cetak'])
             ->name('laporan.cetak');
 
-
+        Route::resource('bidang', \App\Http\Controllers\Admin\BidangController::class);
 });
 
-
-
+// Pegawai routes
 Route::middleware(['auth', 'role:pegawai'])->group(function () {
     Route::get('/pegawai/dashboard', fn () => view('pegawai.dashboard'))
         ->name('pegawai.dashboard');
 });
 
+// Atasan routes
 Route::middleware(['auth', 'role:atasan'])->group(function () {
     Route::get('/atasan/dashboard', fn () => view('atasan.dashboard'))
         ->name('atasan.dashboard');

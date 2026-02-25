@@ -77,6 +77,29 @@
                     </div>
 
                     <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700">
+                            Bidang
+                        </label>
+
+                        <select name="bidang_id"
+                                class="mt-1 block w-full border-gray-300 rounded-md">
+
+                            <option value="">-- Pilih Bidang --</option>
+
+                            @foreach($bidangs as $bidang)
+                                <option value="{{ $bidang->id }}"
+                                    {{ $user->bidang_id == $bidang->id ? 'selected' : '' }}>
+                                    {{ $bidang->nama_bidang }}
+                                </option>
+                            @endforeach
+                        </select>
+
+                        @error('bidang_id')
+                            <p class="text-red-500 text-sm">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="mb-4">
                         <label class="block font-medium">Password Baru (Opsional)</label>
                         <input type="password" name="password"
                                class="border p-2 rounded w-full">

@@ -55,6 +55,7 @@
                             <th class="p-2 border">Nama</th>
                             <th class="p-2 border">Email</th>
                             <th class="p-2 border">Role</th>
+                            <th class="p-2 border">Bidang</th>
                             <th class="p-2 border">Status</th>
                             <th class="p-2 border">Aksi</th>
                         </tr>
@@ -67,6 +68,9 @@
                             <td class="p-2 border">{{ $user->role }}</td>
                             <td class="p-2 border">
                                 {{ $user->is_active ? 'Aktif' : 'Blacklist' }}
+                            </td>
+                            <td class="px-4 py-2">
+                                {{ $user->bidang->nama_bidang ?? '-' }}
                             </td>
                             <td class="p-2 border space-x-2">
 

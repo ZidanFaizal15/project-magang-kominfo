@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Bidang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -11,33 +12,49 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::all();
-        return view('admin.users.index', compact('users'));
+        $users = User::with('bidang')->get();
+        $bidangs = Bidang::all();
+
+        return view('admin.users.index', compact('users', 'bidangs'));
     }
 
     public function edit(User $user)
     {
-        return view('admin.users.edit', compact('user'));
+        $bidangs = Bidang::all();
+        return view('admin.users.edit', compact('user', 'bidangs'));
     }
 
     public function update(Request $request, User $user)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'role' => 'required|in:admin,pegawai,atasan',
-            'password' => 'nullable|min:6'
-        ]);
+        $rules = [
+                    'name'  => 'required|string|max:255',
+                    'email' => 'required|email|unique:users,email,' . $user->id,
+                    'role'  => 'required|in:admin,pegawai,atasan',
+                    'password' => 'nullable|min:6',
+                ];
 
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->role = $request->role;
+                // Jika bukan admin → bidang wajib
+                if ($request->role !== 'admin') {
+                    $rules['bidang_id'] = 'required|exists:bidangs,id';
+                } else {
+                    $rules['bidang_id'] = 'nullable';
+                }
+                
+        $request->validate($rules);
 
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
-        }
+            $user->name  = $request->name;
+            $user->email = $request->email;
+            $user->role  = $request->role;
+            $user->bidang_id = $request->role === 'admin'
+                ? null
+                : $request->bidang_id;
 
-        $user->save();
+            if ($request->filled('password')) {
+                $user->password = \Hash::make($request->password);
+            }
+
+            $user->save();
+
 
         return redirect()->route('admin.users.index')
             ->with('success', 'User berhasil diupdate');

@@ -47,4 +47,24 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isAtasan()
+    {
+        return $this->role === 'atasan';
+    }
+
+    public function isPegawai()
+    {
+        return $this->role === 'pegawai';
+    }
+    
+    public function bidang()
+    {
+        return $this->belongsTo(Bidang::class);
+    }
 }

@@ -20,4 +20,9 @@ class ProgramKegiatan extends Model
         return $this->hasMany(Laporan::class, 'kegiatan_id');
     }
 
+    public function bidang()
+    {
+        return $this->belongsTo(Bidang::class);
+    }
+
 }
