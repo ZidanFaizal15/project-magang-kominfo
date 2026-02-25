@@ -17,7 +17,10 @@ return new class extends Migration
             $table->string('jenis_kegiatan');
             $table->date('tanggal_kegiatan');
             $table->string('status')->default('Proses');
-            $table->string('dokumentasi')->nullable();
+            $table->text('deskripsi')->nullable();
+            $table->foreignId('bidang_id')
+                  ->constrained()
+                  ->cascadeOnDelete();
             $table->timestamps();
         });
     }

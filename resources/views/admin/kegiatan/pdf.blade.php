@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Laporan Kegiatan</title>
+    <title>Surat Program Kegiatan</title>
     <style>
         body {
             font-family: sans-serif;
@@ -15,14 +15,10 @@
             margin-bottom: 20px;
         }
         .section {
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
         .label {
             font-weight: bold;
-        }
-        img {
-            margin-top: 10px;
-            width: 300px;
         }
         hr {
             margin: 15px 0;
@@ -32,40 +28,42 @@
 <body>
 
 <div class="title">
-    LAPORAN KEGIATAN
+    SURAT PROGRAM KEGIATAN
 </div>
 
 <hr>
 
 <div class="section">
     <span class="label">Nama Kegiatan:</span><br>
-    {{ $laporan->kegiatan->nama_kegiatan ?? '-' }}
+    {{ $kegiatan->nama_kegiatan ?? '-' }}
+</div>
+
+<div class="section">
+    <span class="label">Bidang:</span><br>
+    {{ $kegiatan->bidang?->nama_bidang ?? '-' }}
 </div>
 
 <div class="section">
     <span class="label">Jenis Kegiatan:</span><br>
-    {{ $laporan->kegiatan->jenis_kegiatan ?? '-' }}
+    {{ $kegiatan->jenis_kegiatan ?? '-' }}
 </div>
 
 <div class="section">
-    <span class="label">Tanggal:</span><br>
-    {{ $laporan->created_at->format('d-m-Y H:i') }}
+    <span class="label">Tanggal Kegiatan:</span><br>
+    {{ \Carbon\Carbon::parse($kegiatan->tanggal_kegiatan)->format('d-m-Y') }}
+</div>
+
+<div class="section">
+    <span class="label">Status:</span><br>
+    {{ $kegiatan->status ?? '-' }}
 </div>
 
 <hr>
 
 <div class="section">
-    <span class="label">Isi Laporan:</span><br><br>
-    {{ $laporan->isi_laporan }}
+    <span class="label">Deskripsi Kegiatan:</span><br><br>
+    {!! nl2br(e($kegiatan->deskripsi)) !!}
 </div>
-
-@if($laporan->dokumentasi)
-<hr>
-<div class="section">
-    <span class="label">Dokumentasi:</span><br>
-    <img src="{{ public_path('storage/'.$laporan->dokumentasi) }}">
-</div>
-@endif
 
 </body>
 </html>

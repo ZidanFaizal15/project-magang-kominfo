@@ -16,7 +16,18 @@ class LaporanController extends Controller
      */
     public function index()
     {
-        $laporans = Laporan::with('kegiatan','user')->latest()->get();
+        $user = auth()->user();
+
+        if ($user->role === 'admin') {
+            $laporans = \App\Models\Laporan::with(['programKegiatan.bidang'])->get();
+        } else {
+            $laporans = \App\Models\Laporan::with(['programKegiatan.bidang'])
+                ->whereHas('programKegiatan', function ($query) use ($user) {
+                    $query->where('bidang_id', $user->bidang_id);
+                })
+                ->get();
+        }
+
         return view('admin.laporan.index', compact('laporans'));
     }
 

@@ -43,18 +43,11 @@
 
                 <p><strong>ID:</strong> {{ $kegiatan->id }}</p>
                 <p><strong>Nama:</strong> {{ $kegiatan->nama_kegiatan }}</p>
+                <p><strong>Bidang:</strong> {{ $kegiatan->bidang->nama_bidang }}</p>
                 <p><strong>Jenis:</strong> {{ $kegiatan->jenis_kegiatan }}</p>
                 <p><strong>Tanggal:</strong> {{ $kegiatan->tanggal_kegiatan }}</p>
                 <p><strong>Status:</strong> {{ $kegiatan->status }}</p>
-                <p><strong>Laporan:</strong><br>{{ $kegiatan->laporan }}</p>
-
-                @if($kegiatan->dokumentasi)
-                    <div>
-                        <strong>Dokumentasi:</strong><br>
-                        <img src="{{ asset('storage/'.$kegiatan->dokumentasi) }}"
-                             class="w-64 mt-2 rounded">
-                    </div>
-                @endif
+                <p><strong>Deskripsi:</strong> {{ $kegiatan->deskripsi ?? 'Tidak ada deskripsi' }}</p>
 
                 <div class="flex gap-2 mt-4">
                     <a href="{{ route('admin.kegiatan.edit', $kegiatan) }}"

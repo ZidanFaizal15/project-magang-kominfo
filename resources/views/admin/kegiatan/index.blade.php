@@ -63,6 +63,7 @@
                         <tr class="bg-gray-100 text-center">
                             <th class="border p-2">ID</th>
                             <th class="border p-2">Nama</th>
+                            <th class="border p-2">Bidang</th>
                             <th class="border p-2">Jenis</th>
                             <th class="border p-2">Tanggal</th>
                             <th class="border p-2">Status</th>
@@ -79,6 +80,7 @@
                                         {{ $kegiatan->nama_kegiatan }}
                                     </a>
                                 </td>
+                                <td>{{ $kegiatan->bidang->nama_bidang ?? '-' }}</td>
                                 <td class="border p-2">{{ $kegiatan->jenis_kegiatan }}</td>
                                 <td class="border p-2">{{ $kegiatan->tanggal_kegiatan }}</td>
                                 <td class="border p-2">

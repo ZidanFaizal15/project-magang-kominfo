@@ -57,6 +57,23 @@
                                class="w-full border rounded p-2" required>
                     </div>
 
+                    <div class="mb-4">
+                        <label class="block font-medium">Bidang</label>
+
+                        <select name="bidang_id" class="border p-2 rounded w-full">
+
+                            @if(auth()->user()->role === 'admin')
+                                <option value="">-- Pilih Bidang --</option>
+                            @endif
+
+                            @foreach($bidangs as $bidang)
+                                <option value="{{ $bidang->id }}">
+                                    {{ $bidang->nama_bidang }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
                     <div>
                         <label class="block font-medium">Jenis Kegiatan</label>
                         <input type="text" name="jenis_kegiatan"
@@ -78,6 +95,21 @@
                             <option value="Proses">Proses</option>
                             <option value="Selesai">Selesai</option>
                         </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block font-medium text-gray-700">
+                            Deskripsi Kegiatan
+                        </label>
+
+                        <textarea name="deskripsi"
+                                rows="4"
+                                class="mt-1 block w-full border-black-300 rounded-md"
+                                placeholder="Masukkan deskripsi kegiatan (opsional)">{{ old('deskripsi') }}</textarea>
+
+                        @error('deskripsi')
+                            <p class="text-red-500 text-sm">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div class="flex gap-2">

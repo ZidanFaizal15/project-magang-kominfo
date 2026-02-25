@@ -58,6 +58,25 @@
                                class="w-full border rounded p-2" required>
                     </div>
 
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700">
+                            Bidang
+                        </label>
+
+                        <select name="bidang_id"
+                                class="mt-1 block w-full border-gray-300 rounded-md"
+                                required>
+
+                            @foreach($bidangs as $bidang)
+                                <option value="{{ $bidang->id }}"
+                                    {{ $kegiatan->bidang_id == $bidang->id ? 'selected' : '' }}>
+                                    {{ $bidang->nama_bidang }}
+                                </option>
+                            @endforeach
+
+                        </select>
+                    </div>
+
                     <div>
                         <label class="block font-medium">Jenis Kegiatan</label>
                         <input type="text" name="jenis_kegiatan"
@@ -78,6 +97,14 @@
                             <option value="Proses" {{ $kegiatan->status == 'Proses' ? 'selected' : '' }}>Proses</option>
                             <option value="Selesai" {{ $kegiatan->status == 'Selesai' ? 'selected' : '' }}>Selesai</option>
                         </select>
+                    </div>
+
+                    <div>
+                        <textarea name="deskripsi"
+                                rows="4"
+                                class="mt-1 block w-full border-gray-300 rounded-md">
+                            {{ old('deskripsi', $kegiatan->deskripsi) }}
+                        </textarea>
                     </div>
 
                     <div class="flex gap-2">

@@ -23,4 +23,9 @@ class Laporan extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function programKegiatan()
+    {
+        return $this->belongsTo(ProgramKegiatan::class);
+    }
+
 }

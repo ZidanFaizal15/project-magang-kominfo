@@ -15,6 +15,6 @@ class Bidang extends Model
 
     public function programKegiatans()
     {
-        return $this->hasMany(ProgramKegiatan::class);
+        return $this->hasMany(\App\Models\ProgramKegiatan::class);
     }
 }

@@ -11,40 +11,64 @@ class ProgramKegiatanController extends Controller
 {
     public function index()
     {
-        $kegiatans = ProgramKegiatan::withCount('laporans')
-                        ->latest()
-                        ->get();
+        $user = auth()->user();
+
+        if ($user->role === 'admin') {
+            $kegiatans = \App\Models\ProgramKegiatan::with('bidang')->get();
+        } else {
+            $kegiatans = \App\Models\ProgramKegiatan::with('bidang')
+                ->where('bidang_id', $user->bidang_id)
+                ->get();
+        }
 
         return view('admin.kegiatan.index', compact('kegiatans'));
     }
 
     public function create()
     {
-        return view('admin.kegiatan.create');
+        $user = auth()->user();
+
+        if ($user->role === 'admin') {
+            $bidangs = \App\Models\Bidang::all();
+        } else {
+            $bidangs = \App\Models\Bidang::where('id', $user->bidang_id)->get();
+        }
+
+        return view('admin.kegiatan.create', compact('bidangs'));
     }
 
     public function store(Request $request)
     {
+        $user = auth()->user();
+
         $request->validate([
-            'nama_kegiatan'    => 'required',
-            'jenis_kegiatan'   => 'required',
-            'tanggal_kegiatan' => 'required|date',
-            'status'           => 'required',
-            'dokumentasi'      => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'nama_kegiatan'   => 'required|string|max:255',
+            'jenis_kegiatan'  => 'required|string|max:255',
+            'tanggal_kegiatan'=> 'required|date',
+            'status'          => 'required|string',
+            'bidang_id'       => 'nullable|exists:bidangs,id',
+            'deskripsi'       => 'nullable|string'
+            
         ]);
 
-        $data = $request->all();
-
-        if ($request->hasFile('dokumentasi')) {
-            $data['dokumentasi'] = $request->file('dokumentasi')
-                ->store('dokumentasi', 'public');
+        // 🔐 Paksa bidang sesuai user jika bukan admin
+        if ($user->role !== 'admin') {
+            $bidangId = $user->bidang_id;
+        } else {
+            $bidangId = $request->bidang_id;
         }
 
-        ProgramKegiatan::create($data);
+        \App\Models\ProgramKegiatan::create([
+            'nama_kegiatan'    => $request->nama_kegiatan,
+            'jenis_kegiatan'   => $request->jenis_kegiatan,
+            'tanggal_kegiatan' => $request->tanggal_kegiatan,
+            'status'           => $request->status,
+            'bidang_id'        => $bidangId, // 🔥 WAJIB ADA
+            'deskripsi'        => $request->deskripsi,
+        ]);
 
-        return redirect()
-            ->route('admin.kegiatan.index')
-            ->with('success', 'Kegiatan berhasil ditambahkan');
+        return redirect()->route('admin.kegiatan.index')
+            ->with('success', 'Kegiatan berhasil dibuat');
     }
 
 
@@ -64,7 +88,9 @@ class ProgramKegiatanController extends Controller
             'nama_kegiatan' => 'required',
             'jenis_kegiatan' => 'required',
             'tanggal_kegiatan' => 'required|date',
-            'status' => 'required'
+            'status' => 'required',
+            'deskripsi' => 'nullable|string',
+            'bidang_id' => 'required|exists:bidangs,id'
         ]);
 
         $kegiatan->update([
@@ -72,6 +98,8 @@ class ProgramKegiatanController extends Controller
             'jenis_kegiatan' => $request->jenis_kegiatan,
             'tanggal_kegiatan' => $request->tanggal_kegiatan,
             'status' => $request->status, // 🔥 INI YANG PENTING
+            'deskripsi' => $request->deskripsi,
+            'bidang_id' => $request->bidang_id
         ]);
 
         return redirect()->route('admin.kegiatan.index')
@@ -87,10 +115,12 @@ class ProgramKegiatanController extends Controller
             ->with('success', 'Program kegiatan berhasil dihapus');
     }
 
-    public function cetak(ProgramKegiatan $kegiatan)
+    public function cetak($id)
     {
+        $kegiatan = ProgramKegiatan::with('bidang')->findOrFail($id);
+
         $pdf = Pdf::loadView('admin.kegiatan.pdf', compact('kegiatan'));
 
-        return $pdf->download('laporan-program-'.$kegiatan->id.'.pdf');
+        return $pdf->download('program-kegiatan-'.$kegiatan->nama_kegiatan.'.pdf');
     }
 }

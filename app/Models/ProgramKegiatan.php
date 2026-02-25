@@ -11,7 +11,8 @@ class ProgramKegiatan extends Model
         'jenis_kegiatan',
         'tanggal_kegiatan',
         'status',
-        'dokumentasi',
+        'deskripsi',
+        'bidang_id',
     ];
 
     
@@ -22,7 +23,7 @@ class ProgramKegiatan extends Model
 
     public function bidang()
     {
-        return $this->belongsTo(Bidang::class);
+        return $this->belongsTo(\App\Models\Bidang::class);
     }
 
 }
