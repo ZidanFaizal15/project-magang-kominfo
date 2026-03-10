@@ -45,11 +45,6 @@
             </ul>
         </aside>
 
-    <a href="{{ route('admin.evaluasi.create', $laporan->kegiatan_id) }}"
-        class="px-2 py-1 bg-yellow-600 text-white rounded">
-        Evaluasi
-    </a>
-
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 

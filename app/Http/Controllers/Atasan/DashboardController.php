@@ -13,24 +13,26 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
-        // hanya kegiatan dalam bidang atasan
+        // kegiatan dalam bidang atasan
         $kegiatan = ProgramKegiatan::where('bidang_id', $user->bidang_id)->get();
 
         $totalKegiatan = $kegiatan->count();
 
+        // total laporan dari kegiatan bidang atasan
         $totalLaporan = Laporan::whereHas('kegiatan', function ($query) use ($user) {
             $query->where('bidang_id', $user->bidang_id);
         })->count();
 
-        // kegiatan yang sudah memenuhi target laporan
+        // kegiatan yang sudah selesai
         $kegiatanTercapai = $kegiatan->filter(function ($item) {
-            return $item->laporans->count() >= $item->target_peserta;
+            return $item->laporans()->count() >= $item->target_laporan;
         })->count();
 
         return view('atasan.dashboard', compact(
             'totalKegiatan',
             'totalLaporan',
-            'kegiatanTercapai'
+            'kegiatanTercapai',
+            'kegiatan'
         ));
     }
 }

@@ -16,7 +16,6 @@ class ProgramKegiatan extends Model
         'target_laporan',
     ];
 
-    
     public function laporans()
     {
         return $this->hasMany(Laporan::class, 'kegiatan_id');
@@ -30,5 +29,16 @@ class ProgramKegiatan extends Model
     public function evaluasi()
     {
         return $this->hasOne(\App\Models\Evaluasi::class, 'kegiatan_id');
+    }
+
+    // 🔹 Fungsi cek apakah laporan sudah mencapai target
+    public function cekStatus()
+    {
+        $jumlahLaporan = $this->laporans()->count();
+
+        if ($jumlahLaporan >= $this->target_laporan) {
+            $this->status = 'selesai';
+            $this->save();
+        }
     }
 }

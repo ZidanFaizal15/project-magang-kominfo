@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('evaluasis', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('program_kegiatans', function (Blueprint $table) {
+            if (!Schema::hasColumn('program_kegiatans', 'status')) {
+                $table->string('status')->default('proses');
+            }
         });
     }
 
@@ -22,6 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('evaluasis');
+        Schema::table('program_kegiatans', function (Blueprint $table) {
+            $table->dropColumn('status');
+        });
     }
 };
