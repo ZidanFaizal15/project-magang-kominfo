@@ -25,7 +25,6 @@ class Laporan extends Model
 
     public function programKegiatan()
     {
-        return $this->belongsTo(ProgramKegiatan::class);
+        return $this->belongsTo(ProgramKegiatan::class, 'kegiatan_id');
     }
-
 }

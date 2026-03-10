@@ -5,40 +5,34 @@
         </h2>
     </x-slot>
 
-     <div class="flex">
+    <div class="flex">
         <!-- Sidebar -->
         <aside class="w-64 bg-gray-800 min-h-screen text-white">
             <div class="p-4 font-bold text-lg border-b border-gray-700">
-                Admin Panel
+                Atasan Panel
             </div>
             <ul class="p-4 space-y-2">
                 <li>
-                    <a href="{{ route('admin.dashboard') }}"
-                       class="block p-2 rounded {{ request()->routeIs('admin.dashboard') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
+                    <a href="{{ route('atasan.dashboard') }}"
+                       class="block p-2 rounded {{ request()->routeIs('atasan.dashboard') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
                         Dashboard
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('admin.users.index') }}"
-                       class="block p-2 rounded {{ request()->routeIs('admin.users.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
-                        Manajemen User
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.kegiatan.index') }}"
-                       class="block p-2 rounded {{ request()->routeIs('admin.kegiatan.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
+                    <a href="{{ route('atasan.kegiatan.index') }}"
+                       class="block p-2 rounded {{ request()->routeIs('atasan.kegiatan.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
                         Program / Kegiatan
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('admin.laporan.index') }}"
-                    class="block p-2 rounded {{ request()->routeIs('admin.laporan.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
-                        Laporkan Kegiatan
+                    <a href="{{ route('atasan.laporan.index') }}"
+                    class="block p-2 rounded {{ request()->routeIs('atasan.laporan.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
+                        Laporan Kegiatan
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('admin.evaluasi.index') }}"
-                       class="block p-2 rounded {{ request()->routeIs('admin.evaluasi.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
+                    <a href="{{ route('atasan.evaluasi.index') }}"
+                       class="block p-2 rounded {{ request()->routeIs('atasan.evaluasi.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
                         Evaluasi Kegiatan
                     </a>
                 </li>
@@ -62,12 +56,12 @@
                         @if($statusTarget == 'Tercapai')
 
                             @if(!$kegiatan->evaluasi)
-                                <a href="{{ route('admin.evaluasi.create', $kegiatan->id) }}"
+                                <a href="{{ route('atasan.evaluasi.create', $kegiatan->id) }}"
                                 class="bg-green-600 text-white px-4 py-2 rounded">
                                     Beri Evaluasi
                                 </a>
                             @else
-                                <a href="{{ route('admin.evaluasi.show', $kegiatan->evaluasi->id) }}"
+                                <a href="{{ route('atasan.evaluasi.show', $kegiatan->evaluasi->id) }}"
                                 class="bg-blue-600 text-white px-4 py-2 rounded">
                                     Lihat Evaluasi
                                 </a>
@@ -97,12 +91,12 @@
 
                 </div>
                 <div class="flex gap-2 mt-4">
-                    <a href="{{ route('admin.kegiatan.edit', $kegiatan) }}"
+                    <a href="{{ route('atasan.kegiatan.edit', $kegiatan) }}"
                        class="px-3 py-2 bg-yellow-500 text-white rounded">
                         Edit
                     </a>
 
-                    <form action="{{ route('admin.kegiatan.destroy', $kegiatan) }}"
+                    <form action="{{ route('atasan.kegiatan.destroy', $kegiatan) }}"
                           method="POST">
                         @csrf
                         @method('DELETE')
@@ -112,7 +106,7 @@
                         </button>
                     </form>
 
-                    <a href="{{ route('admin.kegiatan.cetak', $kegiatan) }}"
+                    <a href="{{ route('atasan.kegiatan.cetak', $kegiatan) }}"
                        class="px-3 py-2 bg-indigo-600 text-white rounded">
                         Cetak PDF
                     </a>

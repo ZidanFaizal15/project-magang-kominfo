@@ -1,16 +1,53 @@
 <?php
 
-use App\Http\Controllers\Admin\LaporanController;
-use App\Http\Controllers\Admin\ProgramKegiatanController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
+
+/* ========================
+   ADMIN CONTROLLERS
+======================== */
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\BidangController;
+use App\Http\Controllers\Admin\ProgramKegiatanController as AdminKegiatanController;
+use App\Http\Controllers\Admin\LaporanController as AdminLaporanController;
+use App\Http\Controllers\Admin\EvaluasiController as AdminEvaluasiController;
+
+/* ========================
+   PEGAWAI CONTROLLERS
+======================== */
+use App\Http\Controllers\Pegawai\DashboardController as PegawaiDashboardController;
+use App\Http\Controllers\Pegawai\ProgramKegiatanController as PegawaiKegiatanController;
+use App\Http\Controllers\Pegawai\LaporanController as PegawaiLaporanController;
+use App\Http\Controllers\Pegawai\EvaluasiController as PegawaiEvaluasiController;
+
+/* ========================
+   ATASAN CONTROLLERS
+======================== */
+use App\Http\Controllers\Atasan\DashboardController as AtasanDashboardController;
+use App\Http\Controllers\Atasan\ProgramKegiatanController as AtasanKegiatanController;
+use App\Http\Controllers\Atasan\LaporanController as AtasanLaporanController;
+use App\Http\Controllers\Atasan\EvaluasiController as AtasanEvaluasiController;
+
+/*
+|--------------------------------------------------------------------------
+| HOME
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/', function () {
     return view('welcome');
 });
 
+/*
+|--------------------------------------------------------------------------
+| REDIRECT DASHBOARD BERDASARKAN ROLE
+|--------------------------------------------------------------------------
+*/
+
 Route::get('/dashboard', function () {
+
     $user = auth()->user();
 
     return match ($user->role) {
@@ -19,59 +56,151 @@ Route::get('/dashboard', function () {
         'atasan'  => redirect()->route('atasan.dashboard'),
         default   => abort(403),
     };
+
 })->middleware('auth')->name('dashboard');
 
+/*
+|--------------------------------------------------------------------------
+| PROFILE
+|--------------------------------------------------------------------------
+*/
+
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/profile', [ProfileController::class,'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class,'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class,'destroy'])->name('profile.destroy');
+
 });
 
-// Admin routes
+/*
+|--------------------------------------------------------------------------
+| ADMIN ROUTES
+|--------------------------------------------------------------------------
+*/
+
 Route::prefix('admin')
-    ->middleware(['auth', 'role:admin'])
-    ->name('admin.')
+->middleware(['auth','role:admin'])
+->name('admin.')
+->group(function () {
+
+    Route::get('/dashboard', [DashboardController::class,'admin'])
+        ->name('dashboard');
+
+    /* USER */
+    Route::resource('users', UserController::class);
+
+    Route::patch('users/{user}/toggle',
+        [UserController::class,'toggleActive']
+    )->name('users.toggle');
+
+    /* BIDANG */
+    Route::resource('bidang', BidangController::class);
+
+    /* KEGIATAN */
+    Route::resource('kegiatan', AdminKegiatanController::class);
+
+    Route::get('kegiatan/{kegiatan}/cetak',
+        [AdminKegiatanController::class,'cetak']
+    )->name('kegiatan.cetak');
+
+    /* LAPORAN */
+    Route::resource('laporan', AdminLaporanController::class);
+
+    Route::get('laporan/{laporan}/cetak',
+        [AdminLaporanController::class,'cetak']
+    )->name('laporan.cetak');
+
+    /* EVALUASI */
+    Route::resource('evaluasi', AdminEvaluasiController::class)
+        ->except(['create']);
+
+    Route::get('evaluasi/create/{kegiatan}',
+        [AdminEvaluasiController::class,'create']
+    )->name('evaluasi.create');
+
+    Route::get('evaluasi/{evaluasi}/pdf',
+        [AdminEvaluasiController::class,'pdf']
+    )->name('evaluasi.pdf');
+
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| PEGAWAI ROUTES
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth','role:pegawai'])
+    ->prefix('pegawai')
+    ->name('pegawai.')
     ->group(function () {
 
-        Route::get('/dashboard', fn () => view('admin.dashboard'))
-            ->name('dashboard');
+    Route::get('/dashboard', [PegawaiDashboardController::class,'index'])
+        ->name('dashboard');
 
-        Route::resource('users', UserController::class);
-        Route::resource('kegiatan', ProgramKegiatanController::class);
+    // KEGIATAN
+    Route::resource('kegiatan', PegawaiKegiatanController::class)
+        ->only(['index','show']);
 
-        Route::patch('users/{user}/toggle',
-            [UserController::class, 'toggleActive']
-        )->name('users.toggle');
+    // LAPORAN
+    Route::resource('laporan', PegawaiLaporanController::class)
+        ->only(['index','create','store','show']);
 
-        Route::get('kegiatan', [ProgramKegiatanController::class, 'index'])
-            ->name('kegiatan.index');
+    Route::get('/laporan/{laporan}/cetak', [PegawaiLaporanController::class, 'cetak'])
+        ->name('laporan.cetak');
 
-        Route::post('kegiatan', [ProgramKegiatanController::class, 'store'])
-            ->name('kegiatan.store');
+    // EVALUASI
+    Route::resource('evaluasi', PegawaiEvaluasiController::class)
+        ->only(['index','show']);
+    
+    Route::get('evaluasi/{evaluasi}/pdf',
+        [PegawaiEvaluasiController::class,'pdf']
+    )->name('evaluasi.pdf');
 
-        Route::get('kegiatan/{kegiatan}/cetak',
-            [ProgramKegiatanController::class, 'cetak'])
-            ->name('kegiatan.cetak');
-
-        Route::resource('laporan', LaporanController::class);
-
-        Route::get('laporan/{laporan}/cetak',
-            [LaporanController::class,'cetak'])
-            ->name('laporan.cetak');
-
-        Route::resource('bidang', \App\Http\Controllers\Admin\BidangController::class);
 });
 
-// Pegawai routes
-Route::middleware(['auth', 'role:pegawai'])->group(function () {
-    Route::get('/pegawai/dashboard', fn () => view('pegawai.dashboard'))
-        ->name('pegawai.dashboard');
-});
 
-// Atasan routes
-Route::middleware(['auth', 'role:atasan'])->group(function () {
-    Route::get('/atasan/dashboard', fn () => view('atasan.dashboard'))
-        ->name('atasan.dashboard');
+/*
+|--------------------------------------------------------------------------
+| ATASAN ROUTES
+|--------------------------------------------------------------------------
+*/
+
+Route::prefix('atasan')
+->middleware(['auth','role:atasan'])
+->name('atasan.')
+->group(function () {
+
+    /* DASHBOARD */
+    Route::get('/dashboard',
+        [AtasanDashboardController::class,'index']
+    )->name('dashboard');
+
+    /* KEGIATAN */
+    Route::resource('kegiatan', AtasanKegiatanController::class);
+    Route::get('kegiatan/{kegiatan}/cetak',
+        [AtasanKegiatanController::class,'cetak']
+    )->name('kegiatan.cetak');
+
+    /* LAPORAN */
+    Route::resource('laporan', AtasanLaporanController::class)
+        ->only(['index','show','destroy']);
+    Route::get('laporan/{laporan}/cetak',[AtasanLaporanController::class,'cetak']
+    )->name('laporan.cetak');
+
+    /* EVALUASI */
+    Route::resource('evaluasi', AtasanEvaluasiController::class)
+        ->except(['destroy']);
+    Route::get('evaluasi/create/{kegiatan}',
+        [AtasanEvaluasiController::class,'create']
+    )->name('evaluasi.create');
+    Route::get('evaluasi/{evaluasi}/edit', [AtasanEvaluasiController::class,'edit']
+    )->name('evaluasi.edit');
+    Route::get('evaluasi/{evaluasi}/pdf',
+        [AtasanEvaluasiController::class,'pdf']
+    )->name('evaluasi.pdf');
+
 });
 
 

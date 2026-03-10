@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreignId('bidang_id')
                   ->constrained()
                   ->cascadeOnDelete();
+            $table->integer('target_laporan')->default(0);
             $table->timestamps();
         });
     }

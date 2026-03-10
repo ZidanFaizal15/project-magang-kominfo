@@ -1,38 +1,37 @@
 <x-app-layout>
+        <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800">
+            Pelaporan Kegiatan
+        </h2>
+    </x-slot>
     <div class="flex">
         <!-- Sidebar -->
         <aside class="w-64 bg-gray-800 min-h-screen text-white">
             <div class="p-4 font-bold text-lg border-b border-gray-700">
-                Admin Panel
+                Panel Karyawan
             </div>
             <ul class="p-4 space-y-2">
                 <li>
-                    <a href="{{ route('admin.dashboard') }}"
-                       class="block p-2 rounded {{ request()->routeIs('admin.dashboard') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
+                    <a href="{{ route('pegawai.dashboard') }}"
+                       class="block p-2 rounded {{ request()->routeIs('pegawai.dashboard') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
                         Dashboard
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('admin.users.index') }}"
-                       class="block p-2 rounded {{ request()->routeIs('admin.users.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
-                        Manajemen User
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.kegiatan.index') }}"
-                       class="block p-2 rounded {{ request()->routeIs('admin.kegiatan.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
+                    <a href="{{ route('pegawai.kegiatan.index') }}"
+                       class="block p-2 rounded {{ request()->routeIs('pegawai.kegiatan.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
                         Program / Kegiatan
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('admin.laporan.index') }}"
-                    class="block p-2 rounded {{ request()->routeIs('admin.laporan.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
-                        Laporkan Kegiatan
+                    <a href="{{ route('pegawai.laporan.index') }}"
+                    class="block p-2 rounded {{ request()->routeIs('pegawai.laporan.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
+                        Laporan Kegiatan
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('admin.evaluasi.index') }}"
-                       class="block p-2 rounded {{ request()->routeIs('admin.evaluasi.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
+                    <a href="{{ route('pegawai.evaluasi.index') }}"
+                       class="block p-2 rounded {{ request()->routeIs('pegawai.evaluasi.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
                         Evaluasi Kegiatan
                     </a>
                 </li>
@@ -45,7 +44,7 @@
 
         <div class="bg-white p-6 rounded shadow">
 
-            <form action="{{ route('admin.laporan.store') }}"
+            <form action="{{ route('pegawai.laporan.store') }}"
                   method="POST"
                   enctype="multipart/form-data">
 

@@ -1,9 +1,10 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800">
-            Pelaporan Kegiatan
+            Detail Evaluasi
         </h2>
     </x-slot>
+
     <div class="flex">
         <!-- Sidebar -->
         <aside class="w-64 bg-gray-800 min-h-screen text-white">
@@ -43,54 +44,45 @@
                 </li>
             </ul>
         </aside>
+    </div>
 
-<main class="flex-1 p-6 bg-gray-100">
+    <div class="p-6 bg-gray-100 min-h-screen">
+        <div class="bg-white p-6 rounded shadow-md max-w-4xl">
 
-<a href="{{ route('admin.laporan.create') }}"
-class="px-4 py-2 bg-blue-600 text-white rounded">
-+ Buat Laporan
-</a>
+            <h3 class="text-lg font-semibold mb-4">
+                {{ $evaluasi->kegiatan->nama_kegiatan ?? '-' }}
+            </h3>
 
-<div class="bg-white p-4 mt-4 rounded shadow">
-<table class="w-full border">
-<thead>
-<tr class="bg-gray-100 text-center">
-<th class="border p-2">ID</th>
-<th class="border p-2">Kegiatan</th>
-<th class="border p-2">Pelapor</th>
-<th class="border p-2">Tanggal</th>
-<th class="border p-2">Aksi</th>
-</tr>
-</thead>
-<tbody>
-@foreach($laporans as $laporan)
-<tr class="text-center">
-    <td class="border p-2">{{ $laporan->id }}</td>
-    <td class="border p-2">
-        {{ $laporan->kegiatan->nama_kegiatan ?? '-' }}
-    </td>
-    <td class="border p-2">
-        {{ $laporan->user->name ?? '-' }}
-    </td>
-    <td class="border p-2">
-        {{ $laporan->created_at->format('d-m-Y') }}
-    </td>
-    <td class="border p-2 space-x-2">
-        <a href="{{ route('admin.laporan.show',$laporan) }}"
-           class="px-2 py-1 bg-indigo-600 text-white rounded">
-           Detail
-        </a>
-        <a href="{{ route('admin.laporan.cetak',$laporan) }}"
-           class="px-2 py-1 bg-green-600 text-white rounded">
-           Cetak
-        </a>
-    </td>
-</tr>
-@endforeach
-</tbody>
-</table>
-</div>
+            <p><strong>Bidang:</strong>
+                {{ $evaluasi->kegiatan->bidang->nama_bidang ?? '-' }}
+            </p>
 
-</main>
-</div>
+            <p><strong>Status Pencapaian:</strong>
+                <span class="px-2 py-1 rounded text-white
+                    {{ $evaluasi->status_pencapaian == 'Tercapai' ? 'bg-green-600' : 'bg-red-600' }}">
+                    {{ $evaluasi->status_pencapaian }}
+                </span>
+            </p>
+
+            <div class="mt-4">
+                <strong>Catatan Evaluasi:</strong>
+                <div class="border p-3 rounded mt-2 bg-gray-50">
+                    {{ $evaluasi->catatan }}
+                </div>
+            </div>
+
+            <div class="mt-6 flex gap-2">
+                <a href="{{ route('admin.evaluasi.pdf', $evaluasi) }}"
+                   class="px-4 py-2 bg-red-600 text-white rounded">
+                    Cetak PDF
+                </a>
+
+                <a href="{{ route('admin.evaluasi.index') }}"
+                   class="px-4 py-2 bg-gray-600 text-white rounded">
+                    Kembali
+                </a>
+            </div>
+
+        </div>
+    </div>
 </x-app-layout>

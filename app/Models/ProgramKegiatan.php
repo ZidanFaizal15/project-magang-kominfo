@@ -13,6 +13,7 @@ class ProgramKegiatan extends Model
         'status',
         'deskripsi',
         'bidang_id',
+        'target_laporan',
     ];
 
     
@@ -25,5 +26,9 @@ class ProgramKegiatan extends Model
     {
         return $this->belongsTo(\App\Models\Bidang::class);
     }
-
+    
+    public function evaluasi()
+    {
+        return $this->hasOne(\App\Models\Evaluasi::class, 'kegiatan_id');
+    }
 }

@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="flex">
+     <div class="flex">
         <!-- Sidebar -->
         <aside class="w-64 bg-gray-800 min-h-screen text-white">
             <div class="p-4 font-bold text-lg border-b border-gray-700">
@@ -14,19 +14,19 @@
             <ul class="p-4 space-y-2">
                 <li>
                     <a href="{{ route('admin.dashboard') }}"
-                       class="block p-2 rounded hover:bg-gray-700">
+                       class="block p-2 rounded {{ request()->routeIs('admin.dashboard') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
                         Dashboard
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('admin.users.index') }}"
-                       class="block p-2 rounded hover:bg-gray-700">
+                       class="block p-2 rounded {{ request()->routeIs('admin.users.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
                         Manajemen User
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('admin.kegiatan.index') }}"
-                       class="block p-2 rounded bg-gray-700">
+                       class="block p-2 rounded {{ request()->routeIs('admin.kegiatan.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
                         Program / Kegiatan
                     </a>
                 </li>
@@ -34,6 +34,12 @@
                     <a href="{{ route('admin.laporan.index') }}"
                     class="block p-2 rounded {{ request()->routeIs('admin.laporan.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
                         Laporkan Kegiatan
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('admin.evaluasi.index') }}"
+                       class="block p-2 rounded {{ request()->routeIs('admin.evaluasi.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
+                        Evaluasi Kegiatan
                     </a>
                 </li>
             </ul>
@@ -97,6 +103,19 @@
                             <option value="Proses" {{ $kegiatan->status == 'Proses' ? 'selected' : '' }}>Proses</option>
                             <option value="Selesai" {{ $kegiatan->status == 'Selesai' ? 'selected' : '' }}>Selesai</option>
                         </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700">
+                            Target Laporan
+                        </label>
+
+                    <input type="number"
+                        name="target_laporan"
+                        min="1"
+                        value="{{ old('target_laporan', $kegiatan->target_laporan ?? 1) }}"
+                        required
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
                     </div>
 
                     <div>

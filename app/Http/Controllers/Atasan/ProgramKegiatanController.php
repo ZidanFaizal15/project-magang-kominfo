@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Atasan;
 
 use App\Http\Controllers\Controller;
 use App\Models\ProgramKegiatan;
@@ -14,28 +14,20 @@ class ProgramKegiatanController extends Controller
     {
         $user = auth()->user();
 
-        if ($user->role === 'admin') {
-            $kegiatans = \App\Models\ProgramKegiatan::with('bidang')->get();
-        } else {
-            $kegiatans = \App\Models\ProgramKegiatan::with('bidang')
-                ->where('bidang_id', $user->bidang_id)
-                ->get();
-        }
+        $kegiatans = ProgramKegiatan::with('bidang')
+            ->where('bidang_id', $user->bidang_id)
+            ->get();
 
-        return view('admin.kegiatan.index', compact('kegiatans'));
+        return view('atasan.kegiatan.index', compact('kegiatans'));
     }
 
     public function create()
     {
         $user = auth()->user();
 
-        if ($user->role === 'admin') {
-            $bidangs = \App\Models\Bidang::all();
-        } else {
-            $bidangs = \App\Models\Bidang::where('id', $user->bidang_id)->get();
-        }
+        $bidangs = Bidang::where('id', $user->bidang_id)->get();
 
-        return view('admin.kegiatan.create', compact('bidangs'));
+        return view('atasan.kegiatan.create', compact('bidangs'));
     }
 
     public function store(Request $request)
@@ -47,38 +39,35 @@ class ProgramKegiatanController extends Controller
             'jenis_kegiatan'  => 'required|string|max:255',
             'tanggal_kegiatan'=> 'required|date',
             'status'          => 'required|string',
-            'bidang_id'       => 'nullable|exists:bidangs,id',
             'deskripsi'       => 'nullable|string',
             'target_laporan'  => 'required|integer|min:1',
-            
         ]);
 
-        // 🔐 Paksa bidang sesuai user jika bukan admin
-        if ($user->role !== 'admin') {
-            $bidangId = $user->bidang_id;
-        } else {
-            $bidangId = $request->bidang_id;
-        }
-
-        \App\Models\ProgramKegiatan::create([
+        ProgramKegiatan::create([
             'nama_kegiatan'    => $request->nama_kegiatan,
             'jenis_kegiatan'   => $request->jenis_kegiatan,
             'tanggal_kegiatan' => $request->tanggal_kegiatan,
             'status'           => $request->status,
-            'bidang_id'        => $bidangId, // 🔥 WAJIB ADA
+            'bidang_id'        => $user->bidang_id,
             'deskripsi'        => $request->deskripsi,
-            'target_laporan'   => $request->target_laporan, 
+            'target_laporan'   => $request->target_laporan,
         ]);
 
-        return redirect()->route('admin.kegiatan.index')
+        return redirect()->route('atasan.kegiatan.index')
             ->with('success', 'Kegiatan berhasil dibuat');
     }
 
     public function show(ProgramKegiatan $kegiatan)
     {
+        $user = auth()->user();
+
+        // batasi hanya kegiatan bidangnya
+        if ($kegiatan->bidang_id != $user->bidang_id) {
+            abort(403);
+        }
+
         $kegiatan->load(['bidang', 'laporans', 'evaluasi']);
 
-        // Hitung jumlah user unik yang sudah melapor
         $jumlahUserMelapor = $kegiatan->laporans()
             ->distinct('user_id')
             ->count('user_id');
@@ -89,7 +78,7 @@ class ProgramKegiatanController extends Controller
             ? 'Tercapai'
             : 'Belum Tercapai';
 
-        return view('admin.kegiatan.show', compact(
+        return view('atasan.kegiatan.show', compact(
             'kegiatan',
             'jumlahUserMelapor',
             'target',
@@ -99,9 +88,15 @@ class ProgramKegiatanController extends Controller
 
     public function edit(ProgramKegiatan $kegiatan)
     {
-        $bidangs = Bidang::all();
+        $user = auth()->user();
 
-        return view('admin.kegiatan.edit', compact('kegiatan', 'bidangs'));
+        if ($kegiatan->bidang_id != $user->bidang_id) {
+            abort(403);
+        }
+
+        $bidangs = Bidang::where('id', $user->bidang_id)->get();
+
+        return view('atasan.kegiatan.edit', compact('kegiatan','bidangs'));
     }
 
     public function update(Request $request, ProgramKegiatan $kegiatan)
@@ -112,7 +107,6 @@ class ProgramKegiatanController extends Controller
             'tanggal_kegiatan' => 'required|date',
             'status' => 'required',
             'deskripsi' => 'nullable|string',
-            'bidang_id' => 'required|exists:bidangs,id',
             'target_laporan' => 'required|integer|min:1',
         ]);
 
@@ -120,30 +114,20 @@ class ProgramKegiatanController extends Controller
             'nama_kegiatan' => $request->nama_kegiatan,
             'jenis_kegiatan' => $request->jenis_kegiatan,
             'tanggal_kegiatan' => $request->tanggal_kegiatan,
-            'status' => $request->status, // 🔥 INI YANG PENTING
+            'status' => $request->status,
             'deskripsi' => $request->deskripsi,
-            'bidang_id' => $request->bidang_id,
             'target_laporan' => $request->target_laporan,
         ]);
 
-        return redirect()->route('admin.kegiatan.index')
-                        ->with('success','Kegiatan berhasil diupdate');
-    }
-
-
-    public function destroy(ProgramKegiatan $kegiatan)
-    {
-        $kegiatan->delete();
-
-        return redirect()->route('admin.kegiatan.index')
-            ->with('success', 'Program kegiatan berhasil dihapus');
+        return redirect()->route('atasan.kegiatan.index')
+            ->with('success','Kegiatan berhasil diupdate');
     }
 
     public function cetak($id)
     {
         $kegiatan = ProgramKegiatan::with('bidang')->findOrFail($id);
 
-        $pdf = Pdf::loadView('admin.kegiatan.pdf', compact('kegiatan'));
+        $pdf = Pdf::loadView('atasan.kegiatan.pdf', compact('kegiatan'));
 
         return $pdf->download('program-kegiatan-'.$kegiatan->nama_kegiatan.'.pdf');
     }

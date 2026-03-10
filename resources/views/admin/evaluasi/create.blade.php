@@ -1,9 +1,10 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800">
-            Pelaporan Kegiatan
+            Buat Evaluasi
         </h2>
     </x-slot>
+
     <div class="flex">
         <!-- Sidebar -->
         <aside class="w-64 bg-gray-800 min-h-screen text-white">
@@ -43,54 +44,46 @@
                 </li>
             </ul>
         </aside>
+    </div>
 
-<main class="flex-1 p-6 bg-gray-100">
+        <main class="flex-1 p-6 bg-gray-100">
+            <div class="bg-white p-6 rounded shadow space-y-4">
 
-<a href="{{ route('admin.laporan.create') }}"
-class="px-4 py-2 bg-blue-600 text-white rounded">
-+ Buat Laporan
-</a>
+                <h3 class="text-lg font-bold">
+                    {{ $kegiatan->nama_kegiatan }}
+                </h3>
 
-<div class="bg-white p-4 mt-4 rounded shadow">
-<table class="w-full border">
-<thead>
-<tr class="bg-gray-100 text-center">
-<th class="border p-2">ID</th>
-<th class="border p-2">Kegiatan</th>
-<th class="border p-2">Pelapor</th>
-<th class="border p-2">Tanggal</th>
-<th class="border p-2">Aksi</th>
-</tr>
-</thead>
-<tbody>
-@foreach($laporans as $laporan)
-<tr class="text-center">
-    <td class="border p-2">{{ $laporan->id }}</td>
-    <td class="border p-2">
-        {{ $laporan->kegiatan->nama_kegiatan ?? '-' }}
-    </td>
-    <td class="border p-2">
-        {{ $laporan->user->name ?? '-' }}
-    </td>
-    <td class="border p-2">
-        {{ $laporan->created_at->format('d-m-Y') }}
-    </td>
-    <td class="border p-2 space-x-2">
-        <a href="{{ route('admin.laporan.show',$laporan) }}"
-           class="px-2 py-1 bg-indigo-600 text-white rounded">
-           Detail
-        </a>
-        <a href="{{ route('admin.laporan.cetak',$laporan) }}"
-           class="px-2 py-1 bg-green-600 text-white rounded">
-           Cetak
-        </a>
-    </td>
-</tr>
-@endforeach
-</tbody>
-</table>
-</div>
+                <p><strong>Bidang:</strong> {{ $kegiatan->bidang->nama_bidang }}</p>
+                <p><strong>Target:</strong> {{ $kegiatan->target_laporan }} User</p>
+                <p><strong>Sudah Melapor:</strong> {{ $jumlahUserMelapor }} User</p>
 
-</main>
-</div>
+                <form method="POST" action="{{ route('admin.evaluasi.store') }}">
+                    @csrf
+
+                    <input type="hidden" name="kegiatan_id" value="{{ $kegiatan->id }}">
+
+                    <div>
+                        <label class="block font-semibold mb-2">Catatan Evaluasi</label>
+                        <textarea name="catatan"
+                                  class="w-full border rounded p-3"
+                                  rows="5"
+                                  required></textarea>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit"
+                                class="bg-green-600 text-white px-4 py-2 rounded">
+                            Simpan Evaluasi
+                        </button>
+
+                        <a href="{{ route('admin.kegiatan.show', $kegiatan) }}"
+                           class="ml-2 bg-gray-500 text-white px-4 py-2 rounded">
+                            Batal
+                        </a>
+                    </div>
+                </form>
+
+            </div>
+        </main>
+    </div>
 </x-app-layout>

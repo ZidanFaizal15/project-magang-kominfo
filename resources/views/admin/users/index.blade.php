@@ -55,8 +55,8 @@
                             <th class="p-2 border">Nama</th>
                             <th class="p-2 border">Email</th>
                             <th class="p-2 border">Role</th>
-                            <th class="p-2 border">Bidang</th>
                             <th class="p-2 border">Status</th>
+                            <th class="p-2 border">Bidang</th>
                             <th class="p-2 border">Aksi</th>
                         </tr>
                     </thead>

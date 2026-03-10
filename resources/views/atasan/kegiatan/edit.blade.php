@@ -1,44 +1,38 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800">
-            Tambah Kegiatan
+            Edit Kegiatan
         </h2>
     </x-slot>
 
-    <div class="flex">
+     <div class="flex">
         <!-- Sidebar -->
         <aside class="w-64 bg-gray-800 min-h-screen text-white">
             <div class="p-4 font-bold text-lg border-b border-gray-700">
-                Admin Panel
+                Atasan Panel
             </div>
             <ul class="p-4 space-y-2">
                 <li>
-                    <a href="{{ route('admin.dashboard') }}"
-                       class="block p-2 rounded {{ request()->routeIs('admin.dashboard') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
+                    <a href="{{ route('atasan.dashboard') }}"
+                       class="block p-2 rounded {{ request()->routeIs('atasan.dashboard') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
                         Dashboard
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('admin.users.index') }}"
-                       class="block p-2 rounded {{ request()->routeIs('admin.users.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
-                        Manajemen User
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.kegiatan.index') }}"
-                       class="block p-2 rounded {{ request()->routeIs('admin.kegiatan.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
+                    <a href="{{ route('atasan.kegiatan.index') }}"
+                       class="block p-2 rounded {{ request()->routeIs('atasan.kegiatan.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
                         Program / Kegiatan
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('admin.laporan.index') }}"
-                    class="block p-2 rounded {{ request()->routeIs('admin.laporan.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
-                        Laporkan Kegiatan
+                    <a href="{{ route('atasan.laporan.index') }}"
+                    class="block p-2 rounded {{ request()->routeIs('atasan.laporan.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
+                        Laporan Kegiatan
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('admin.evaluasi.index') }}"
-                       class="block p-2 rounded {{ request()->routeIs('admin.evaluasi.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
+                    <a href="{{ route('atasan.evaluasi.index') }}"
+                       class="block p-2 rounded {{ request()->routeIs('atasan.evaluasi.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
                         Evaluasi Kegiatan
                     </a>
                 </li>
@@ -49,62 +43,63 @@
         <main class="flex-1 p-6 bg-gray-100">
             <div class="bg-white p-6 rounded shadow">
 
-                <form action="{{ route('admin.kegiatan.store') }}"
+                <form action="{{ route('atasan.kegiatan.update', $kegiatan) }}"
                       method="POST"
                       enctype="multipart/form-data"
                       class="space-y-4">
 
                     @csrf
+                    @method('PUT')
 
                     <div>
                         <label class="block font-medium">Nama Kegiatan</label>
                         <input type="text" name="nama_kegiatan"
-                               value="{{ old('nama_kegiatan') }}"
+                               value="{{ old('nama_kegiatan', $kegiatan->nama_kegiatan) }}"
                                class="w-full border rounded p-2" required>
                     </div>
 
                     <div class="mb-4">
-                        <label class="block font-medium">Bidang</label>
+                        <label class="block text-sm font-medium text-gray-700">
+                            Bidang
+                        </label>
 
-                        <select name="bidang_id" class="border p-2 rounded w-full">
-
-                            @if(auth()->user()->role === 'admin')
-                                <option value="">-- Pilih Bidang --</option>
-                            @endif
+                        <select name="bidang_id"
+                                class="mt-1 block w-full border-gray-300 rounded-md"
+                                required>
 
                             @foreach($bidangs as $bidang)
-                                <option value="{{ $bidang->id }}">
+                                <option value="{{ $bidang->id }}"
+                                    {{ $kegiatan->bidang_id == $bidang->id ? 'selected' : '' }}>
                                     {{ $bidang->nama_bidang }}
                                 </option>
                             @endforeach
+
                         </select>
                     </div>
 
                     <div>
                         <label class="block font-medium">Jenis Kegiatan</label>
                         <input type="text" name="jenis_kegiatan"
-                               value="{{ old('jenis_kegiatan') }}"
+                               value="{{ old('jenis_kegiatan', $kegiatan->jenis_kegiatan) }}"
                                class="w-full border rounded p-2" required>
                     </div>
 
                     <div>
                         <label class="block font-medium">Tanggal Kegiatan</label>
                         <input type="date" name="tanggal_kegiatan"
-                               value="{{ old('tanggal_kegiatan') }}"
+                               value="{{ old('tanggal_kegiatan', $kegiatan->tanggal_kegiatan) }}"
                                class="w-full border rounded p-2" required>
                     </div>
 
                     <div>
                         <label class="block font-medium">Status</label>
                         <select name="status" class="w-full border rounded p-2" required>
-                            <option value="">-- Pilih Status --</option>
-                            <option value="Proses">Proses</option>
-                            <option value="Selesai">Selesai</option>
+                            <option value="Proses" {{ $kegiatan->status == 'Proses' ? 'selected' : '' }}>Proses</option>
+                            <option value="Selesai" {{ $kegiatan->status == 'Selesai' ? 'selected' : '' }}>Selesai</option>
                         </select>
-
                     </div>
 
-                                        <div class="mb-4">
+                    <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700">
                             Target Laporan
                         </label>
@@ -117,28 +112,21 @@
                         class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block font-medium text-gray-700">
-                            Deskripsi Kegiatan
-                        </label>
-
+                    <div>
                         <textarea name="deskripsi"
                                 rows="4"
-                                class="mt-1 block w-full border-black-300 rounded-md"
-                                placeholder="Masukkan deskripsi kegiatan (opsional)">{{ old('deskripsi') }}</textarea>
-
-                        @error('deskripsi')
-                            <p class="text-red-500 text-sm">{{ $message }}</p>
-                        @enderror
+                                class="mt-1 block w-full border-gray-300 rounded-md">
+                            {{ old('deskripsi', $kegiatan->deskripsi) }}
+                        </textarea>
                     </div>
 
                     <div class="flex gap-2">
                         <button type="submit"
-                                class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                            Simpan
+                                class="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">
+                            Update
                         </button>
 
-                        <a href="{{ route('admin.kegiatan.index') }}"
+                        <a href="{{ route('atasan.kegiatan.index') }}"
                            class="px-4 py-2 bg-gray-500 text-white rounded">
                             Batal
                         </a>
