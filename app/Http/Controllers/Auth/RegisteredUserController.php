@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Bidang;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,7 +20,9 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+        $bidangs = Bidang::all();
+
+        return view('auth.register', compact('bidangs'));
     }
 
     /**
@@ -30,18 +33,20 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'role' => 'pegawai',
-
+            'name' => ['required','string','max:255'],
+            'email' => ['required','string','lowercase','email','max:255','unique:users'],
+            'password' => ['required','confirmed', Rules\Password::defaults()],
+            'role' => ['required','in:pegawai,atasan'],
+            'bidang_id' => ['required','exists:bidangs,id'],
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'pegawai',
+            'role' => $request->role,
+            'bidang_id' => $request->bidang_id,
+            'is_active' => false
         ]);
 
         event(new Registered($user));

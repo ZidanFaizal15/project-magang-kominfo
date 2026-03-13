@@ -88,7 +88,7 @@ Route::prefix('admin')
         ->name('dashboard');
 
     /* USER */
-    Route::resource('users', UserController::class);
+    Route::resource('users', App\Http\Controllers\Admin\UserController::class);
 
     Route::patch('users/{user}/toggle',
         [UserController::class,'toggleActive']

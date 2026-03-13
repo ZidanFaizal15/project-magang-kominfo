@@ -18,6 +18,13 @@ class UserController extends Controller
         return view('admin.users.index', compact('users', 'bidangs'));
     }
 
+    public function create()
+    {
+        $bidangs = Bidang::all();
+
+        return view('admin.users.create', compact('bidangs'));
+    }
+
     public function edit(User $user)
     {
         $bidangs = Bidang::all();
@@ -78,5 +85,28 @@ class UserController extends Controller
         $user->save();
 
         return back()->with('success', 'Status user diperbarui');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6',
+            'role' => 'required|in:admin,atasan,pegawai',
+            'bidang_id' => 'nullable|exists:bidangs,id',
+        ]);
+
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => $request->role,
+            'bidang_id' => $request->bidang_id,
+            'is_active' => true
+        ]);
+
+        return redirect()->route('admin.users.index')
+            ->with('success','User berhasil ditambahkan');
     }
 }

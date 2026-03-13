@@ -16,8 +16,8 @@
 </div>
 
 <div class="content">
-    <p><strong>Nama Kegiatan:</strong> {{ $evaluasi->laporan->kegiatan->nama_kegiatan }}</p>
-    <p><strong>Bidang:</strong> {{ $evaluasi->laporan->kegiatan->bidang->nama_bidang }}</p>
+    <p><strong>Nama Kegiatan:</strong> {{ $evaluasi->kegiatan->nama_kegiatan }}</p>
+    <p><strong>Bidang:</strong> {{ $evaluasi->kegiatan->bidang->nama_bidang }}</p>
     <p><strong>Status Pencapaian:</strong> {{ $evaluasi->status_pencapaian }}</p>
 
     <p><strong>Catatan Evaluasi:</strong></p>

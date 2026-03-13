@@ -16,6 +16,37 @@
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
+        <!-- Bidang -->
+        <div class="mt-4">
+            <x-input-label for="bidang_id" value="Bidang" />
+
+            <select id="bidang_id" name="bidang_id" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm" required>
+                <option value="">-- Pilih Bidang --</option>
+
+                @foreach($bidangs as $bidang)
+                    <option value="{{ $bidang->id }}">
+                        {{ $bidang->nama_bidang }}
+                    </option>
+                @endforeach
+
+            </select>
+
+            <x-input-error :messages="$errors->get('bidang_id')" class="mt-2" />
+        </div>
+
+        <!-- Role -->
+        <div class="mt-4">
+            <x-input-label for="role" value="Role" />
+
+            <select id="role" name="role" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm" required>
+                <option value="">-- Pilih Role --</option>
+                <option value="pegawai">Pegawai</option>
+                <option value="atasan">Atasan</option>
+            </select>
+
+            <x-input-error :messages="$errors->get('role')" class="mt-2" />
+        </div>
+
         <!-- Password -->
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />
