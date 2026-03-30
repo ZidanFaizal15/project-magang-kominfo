@@ -4,42 +4,6 @@
             Buat Evaluasi
         </h2>
     </x-slot>
-
-    <div class="flex">
-        <!-- Sidebar -->
-        <aside class="w-64 bg-gray-800 min-h-screen text-white">
-            <div class="p-4 font-bold text-lg border-b border-gray-700">
-                Atasan Panel
-            </div>
-            <ul class="p-4 space-y-2">
-                <li>
-                    <a href="{{ route('atasan.dashboard') }}"
-                       class="block p-2 rounded {{ request()->routeIs('atasan.dashboard') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
-                        Dashboard
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('atasan.kegiatan.index') }}"
-                       class="block p-2 rounded {{ request()->routeIs('atasan.kegiatan.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
-                        Program / Kegiatan
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('atasan.laporan.index') }}"
-                    class="block p-2 rounded {{ request()->routeIs('atasan.laporan.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
-                        Laporan Kegiatan
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('atasan.evaluasi.index') }}"
-                       class="block p-2 rounded {{ request()->routeIs('atasan.evaluasi.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
-                        Evaluasi Kegiatan
-                    </a>
-                </li>
-            </ul>
-        </aside>
-    </div>
-
         <main class="flex-1 p-6 bg-gray-100">
             <div class="bg-white p-6 rounded shadow space-y-4">
 

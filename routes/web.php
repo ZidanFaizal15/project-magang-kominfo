@@ -105,7 +105,8 @@ Route::prefix('admin')
     )->name('kegiatan.cetak');
 
     /* LAPORAN */
-    Route::resource('laporan', AdminLaporanController::class);
+    Route::resource('laporan', AdminLaporanController::class)
+        ->only(['index','create','store','show', 'edit', 'update', 'destroy']);
 
     Route::get('laporan/{laporan}/cetak',
         [AdminLaporanController::class,'cetak']
@@ -145,7 +146,7 @@ Route::middleware(['auth','role:pegawai'])
 
     // LAPORAN
     Route::resource('laporan', PegawaiLaporanController::class)
-        ->only(['index','create','store','show']);
+        ->only(['index','create','store','show', 'edit', 'update', 'destroy']);
 
     Route::get('/laporan/{laporan}/cetak', [PegawaiLaporanController::class, 'cetak'])
         ->name('laporan.cetak');
@@ -191,12 +192,10 @@ Route::prefix('atasan')
 
     /* EVALUASI */
     Route::resource('evaluasi', AtasanEvaluasiController::class)
-        ->except(['destroy']);
+        ->except(['destroy','create']);
     Route::get('evaluasi/create/{kegiatan}',
         [AtasanEvaluasiController::class,'create']
     )->name('evaluasi.create');
-    Route::get('evaluasi/{evaluasi}/edit', [AtasanEvaluasiController::class,'edit']
-    )->name('evaluasi.edit');
     Route::get('evaluasi/{evaluasi}/pdf',
         [AtasanEvaluasiController::class,'pdf']
     )->name('evaluasi.pdf');

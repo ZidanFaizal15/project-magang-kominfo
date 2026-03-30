@@ -85,26 +85,61 @@ class LaporanController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
-    }
+        $laporan = Laporan::findOrFail($id);
+        $kegiatans = ProgramKegiatan::all(); // ← INI YANG KURANG
 
+        return view('admin.laporan.edit', compact('laporan', 'kegiatans'));
+    }
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $laporan = Laporan::findOrFail($id);
+
+        if ($laporan->status == 'disetujui') {
+            return back()->with('error', 'Laporan sudah disetujui dan tidak bisa diedit');
+        }
+
+        $request->validate([
+            'kegiatan_id' => 'required',
+            'isi_laporan' => 'required',
+            'dokumentasi' => 'nullable|image'
+        ]);
+
+        $data = $request->all();
+
+        if ($request->hasFile('dokumentasi')) {
+            $data['dokumentasi'] = $request->file('dokumentasi')
+                ->store('laporan','public');
+        }
+
+        $laporan->update($data);
+
+        return redirect()->route('admin.laporan.index')
+            ->with('success', 'Laporan berhasil diupdate');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Laporan $laporan)
+    public function destroy($id)
     {
+        $laporan = Laporan::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        // OPTIONAL: cegah hapus kalau sudah divalidasi
+        if ($laporan->status == 'disetujui') {
+            return back()->with('error', 'Laporan sudah disetujui dan tidak bisa dihapus');
+        }
+
         $laporan->delete();
-        return back()->with('success','Laporan dihapus');
+
+        return redirect()->route('admin.laporan.index')
+            ->with('success', 'Laporan berhasil dihapus');
     }
 
     public function cetak(Laporan $laporan)

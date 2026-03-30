@@ -17,15 +17,24 @@ class EvaluasiController extends Controller
     public function index()
     {
         $user = auth()->user();
-
+  
         $evaluasis = Evaluasi::with(['kegiatan.bidang'])
             ->whereHas('kegiatan', function ($q) use ($user) {
                 $q->where('bidang_id', $user->bidang_id);
             })
             ->latest()
             ->get();
+        $kegiatanSiap = ProgramKegiatan::where('bidang_id', $user->bidang_id)
+            ->whereDoesntHave('evaluasi')
+            ->get()
+            ->filter(function ($item) {
+                return $item->laporans()
+                    ->distinct('user_id')
+                    ->count('user_id') >= $item->target_laporan;
+            })
+            ->values(); // <- penting biar index rapi
 
-        return view('atasan.evaluasi.index', compact('evaluasis'));
+        return view('atasan.evaluasi.index', compact('evaluasis', 'kegiatanSiap'));
     }
 
     /**
@@ -51,7 +60,6 @@ class EvaluasiController extends Controller
         if ($kegiatan->evaluasi) {
             return redirect()->route('atasan.evaluasi.show', $kegiatan->evaluasi->id);
         }
-
         return view('atasan.evaluasi.create', compact('kegiatan', 'jumlahUserMelapor'));
     }
 

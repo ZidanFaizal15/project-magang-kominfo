@@ -18,18 +18,40 @@ class EvaluasiController extends Controller
     {
         $user = auth()->user();
 
-        $query = Evaluasi::with(['kegiatan.bidang']);
-
-        // Filter berdasarkan bidang (kecuali admin)
-        if ($user->role !== 'admin') {
-            $query->whereHas('kegiatan', function ($q) use ($user) {
-                $q->where('bidang_id', $user->bidang_id);
-            });
+        // ======================
+        // DATA EVALUASI
+        // ======================
+        if ($user->role === 'admin') {
+            $evaluasis = Evaluasi::with(['kegiatan.bidang'])
+                ->latest()
+                ->get();
+        } else {
+            $evaluasis = Evaluasi::with(['kegiatan.bidang'])
+                ->whereHas('kegiatan', function ($q) use ($user) {
+                    $q->where('bidang_id', $user->bidang_id);
+                })
+                ->latest()
+                ->get();
         }
 
-        $evaluasis = $query->latest()->get();
+        // ======================
+        // KEGIATAN SIAP EVALUASI
+        // ======================
+        if ($user->role === 'admin') {
+            $kegiatanSiap = ProgramKegiatan::whereDoesntHave('evaluasi')->get();
+        } else {
+            $kegiatanSiap = ProgramKegiatan::where('bidang_id', $user->bidang_id)
+                ->whereDoesntHave('evaluasi')
+                ->get();
+        }
 
-        return view('admin.evaluasi.index', compact('evaluasis'));
+        $kegiatanSiap = $kegiatanSiap->filter(function ($item) {
+            return $item->laporans()
+                ->distinct('user_id')
+                ->count('user_id') >= $item->target_laporan;
+        });
+
+        return view('admin.evaluasi.index', compact('evaluasis', 'kegiatanSiap'));
     }
 
     /**
@@ -38,6 +60,10 @@ class EvaluasiController extends Controller
     public function create(ProgramKegiatan $kegiatan)
     {
         $user = auth()->user();
+
+        if ($user->role !== 'admin' && $kegiatan->bidang_id != $user->bidang_id) {
+            abort(403);
+        }
 
         if (!in_array($user->role, ['admin', 'atasan'])) {
             abort(403);
@@ -141,6 +167,17 @@ class EvaluasiController extends Controller
      */
     public function update(Request $request, Evaluasi $evaluasi)
     {
+        $user = auth()->user();
+
+        if (!in_array($user->role, ['admin', 'atasan'])) {
+            abort(403);
+        }
+
+        if ($user->role !== 'admin' &&
+            $evaluasi->kegiatan->bidang_id != $user->bidang_id) {
+            abort(403);
+        }
+
         $request->validate([
             'catatan' => 'required|string'
         ]);
@@ -158,6 +195,13 @@ class EvaluasiController extends Controller
      */
     public function pdf(Evaluasi $evaluasi)
     {
+        $user = auth()->user();
+
+        if ($user->role !== 'admin' &&
+            $evaluasi->kegiatan->bidang_id != $user->bidang_id) {
+            abort(403);
+        }
+
         $pdf = Pdf::loadView('admin.evaluasi.pdf', compact('evaluasi'));
 
         return $pdf->download('evaluasi-'.$evaluasi->id.'.pdf');

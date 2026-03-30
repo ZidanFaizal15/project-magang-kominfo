@@ -1,43 +1,14 @@
 <x-app-layout>
-        <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800">
-            Pelaporan Kegiatan
-        </h2>
+    <x-slot name="header">
+        <div>
+            <h2 class="text-2xl font-bold text-gray-800">
+                Pelaporan Kegiatan
+            </h2>
+            <p class="text-sm text-gray-500">
+                Kelola dan lihat laporan kegiatan Anda
+            </p>
+        </div>
     </x-slot>
-    <div class="flex">
-        <!-- Sidebar -->
-        <aside class="w-64 bg-gray-800 min-h-screen text-white">
-            <div class="p-4 font-bold text-lg border-b border-gray-700">
-                Panel Karyawan
-            </div>
-            <ul class="p-4 space-y-2">
-                <li>
-                    <a href="{{ route('pegawai.dashboard') }}"
-                       class="block p-2 rounded {{ request()->routeIs('pegawai.dashboard') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
-                        Dashboard
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('pegawai.kegiatan.index') }}"
-                       class="block p-2 rounded {{ request()->routeIs('pegawai.kegiatan.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
-                        Program / Kegiatan
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('pegawai.laporan.index') }}"
-                    class="block p-2 rounded {{ request()->routeIs('pegawai.laporan.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
-                        Laporan Kegiatan
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('pegawai.evaluasi.index') }}"
-                       class="block p-2 rounded {{ request()->routeIs('pegawai.evaluasi.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
-                        Evaluasi Kegiatan
-                    </a>
-                </li>
-            </ul>
-        </aside>
-
     <main class="flex-1 p-6 bg-gray-100">
 
         <h2 class="text-2xl font-bold mb-4">Buat Laporan</h2>
@@ -102,6 +73,11 @@
                         class="px-4 py-2 bg-blue-600 text-white rounded">
                     Simpan Laporan
                 </button>
+
+                <a href="{{ route('pegawai.laporan.index') }}"
+                    class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded">
+                    Kembali
+                </a>
 
             </form>
 

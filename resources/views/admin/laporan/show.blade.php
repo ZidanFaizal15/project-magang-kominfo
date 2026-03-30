@@ -1,35 +1,15 @@
 <x-app-layout>
+    <x-slot name="header">
+             <h2 class="text-2xl font-bold text-gray-800">
+                Pelaporan Kegiatan
+            </h2>
+            <p class="text-sm text-gray-500">
+                Kelola dan lihat laporan kegiatan yang ada di sistem
+            </p>
+    </x-slot>
 <div class="flex">
 
-    <!-- Sidebar -->
-        <aside class="w-64 bg-gray-800 min-h-screen text-white">
-            <div class="p-4 font-bold text-lg border-b border-gray-700">
-                Admin Panel
-            </div>
-            <ul class="p-4 space-y-2">
-                <li>
-                    <a href="{{ route('admin.dashboard') }}" class="block p-2 rounded hover:bg-gray-700">
-                        Dashboard
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.users.index') }}" class="block p-2 rounded hover:bg-gray-700">
-                        Manajemen User
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.kegiatan.index') }}" class="block p-2 rounded hover:bg-gray-700">
-                        Program / Kegiatan
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.laporan.index') }}"
-                    class="block p-2 rounded {{ request()->routeIs('admin.laporan.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
-                        Laporkan Kegiatan
-                    </a>
-                </li>
-            </ul>
-        </aside>
+
 
     <main class="flex-1 p-6 bg-gray-100">
 
@@ -69,10 +49,26 @@
             </div>
             @endif
 
-            <div class="mt-4">
+            <div class="mt-6 flex items-center gap-2">
+                <a href="{{ route('admin.laporan.edit', $laporan->id) }}"
+                    class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-2 rounded">
+                    Edit
+                </a>
+
+                <form action="{{ route('admin.laporan.destroy', $laporan->id) }}"
+                    method="POST">
+                    @csrf
+                    @method('DELETE')
+
+                    <button onclick="return confirm('Yakin hapus laporan?')"
+                        class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded">
+                        Hapus
+                    </button>
+                </form>
+
                 <a href="{{ route('admin.laporan.index') }}"
-                   class="px-4 py-2 bg-gray-600 text-white rounded">
-                   Kembali
+                    class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded">
+                    Kembali
                 </a>
             </div>
 

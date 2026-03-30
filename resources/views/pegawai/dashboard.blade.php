@@ -4,44 +4,6 @@
             Dashboard Pegawai
         </h2>
     </x-slot>
-    <div class="flex">
-        <!-- Sidebar -->
-        <aside class="w-64 bg-gray-800 min-h-screen text-white">
-            <div class="p-4 font-bold text-lg border-b border-gray-700">
-                Panel Karyawan
-            </div>
-            <ul class="p-4 space-y-2">
-                <li>
-                    <a href="{{ route('pegawai.dashboard') }}"
-                       class="block p-2 rounded {{ request()->routeIs('pegawai.dashboard') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
-                        Dashboard
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('pegawai.kegiatan.index') }}"
-                       class="block p-2 rounded {{ request()->routeIs('pegawai.kegiatan.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
-                        Program / Kegiatan
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('pegawai.laporan.index') }}"
-                    class="block p-2 rounded {{ request()->routeIs('pegawai.laporan.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
-                        Laporan Kegiatan
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('pegawai.evaluasi.index') }}"
-                       class="block p-2 rounded {{ request()->routeIs('pegawai.evaluasi.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
-                        Evaluasi Kegiatan
-                    </a>
-                </li>
-            </ul>
-        </aside>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800">
-            Dashboard Pegawai
-        </h2>
-    </x-slot>
 
 <div class="py-6">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -51,7 +13,7 @@
             <div class="p-6 text-gray-900">
                 Selamat datang, <b>{{ auth()->user()->name }}</b> 👋  
                 <br>
-                Sistem Monitoring & Review Kegiatan Diskominfo
+                Berikut adalah ringkasan kegiatan Anda di bidang <b>{{ auth()->user()->bidang->nama_bidang }}</b>.  
             </div>
         </div>
 

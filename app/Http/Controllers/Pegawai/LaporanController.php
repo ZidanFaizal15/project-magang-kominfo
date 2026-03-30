@@ -79,6 +79,64 @@ class LaporanController extends Controller
     }
 
     /**
+     * Form edit laporan
+    */  
+    public function edit($id)
+    {
+        $laporan = Laporan::findOrFail($id);
+        $kegiatans = ProgramKegiatan::all(); // ← INI YANG KURANG
+
+        return view('pegawai.laporan.edit', compact('laporan', 'kegiatans'));
+    }
+
+    /**
+     * Update laporan
+     */
+    public function update(Request $request, $id)
+    {
+        $laporan = Laporan::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        // OPTIONAL: cegah edit kalau sudah divalidasi
+        if ($laporan->status == 'disetujui') {
+            return back()->with('error', 'Laporan sudah disetujui dan tidak bisa diedit');
+        }
+
+        $request->validate([
+            'kegiatan_id' => 'required',
+            'isi_laporan' => 'required',
+            'dokumentasi' => 'nullable|image'
+        ]);
+
+
+        $laporan->update($request->all());
+
+        return redirect()->route('pegawai.laporan.index')
+            ->with('success', 'Laporan berhasil diupdate');
+    }
+
+    /**
+    * Hapus laporan
+    */
+    public function destroy($id)
+    {
+        $laporan = Laporan::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        // OPTIONAL: cegah hapus kalau sudah divalidasi
+        if ($laporan->status == 'disetujui') {
+            return back()->with('error', 'Laporan sudah disetujui dan tidak bisa dihapus');
+        }
+
+        $laporan->delete();
+
+        return redirect()->route('pegawai.laporan.index')
+            ->with('success', 'Laporan berhasil dihapus');
+    }
+
+    /**
      * Cetak laporan PDF
      */
     public function cetak(Laporan $laporan)

@@ -131,4 +131,6 @@ class ProgramKegiatanController extends Controller
 
         return $pdf->download('program-kegiatan-'.$kegiatan->nama_kegiatan.'.pdf');
     }
+
+    
 }

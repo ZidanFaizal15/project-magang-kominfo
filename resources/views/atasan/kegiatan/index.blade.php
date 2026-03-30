@@ -1,50 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800">
-            Program / Kegiatan
+        <h2 class="text-2xl font-bold text-gray-800">
+            Program/Kegiatan
         </h2>
+        <p class="text-sm text-gray-500">
+            Lihat dan kelola program/kegiatan
+        </p>
     </x-slot>
 
 <div class="flex">
-
-<!-- Sidebar -->
-<aside class="w-64 bg-gray-800 min-h-screen text-white">
-<div class="p-4 font-bold text-lg border-b border-gray-700">
-Atasan Panel
-</div>
-
-<ul class="p-4 space-y-2">
-
-<li>
-<a href="{{ route('atasan.dashboard') }}"
-class="block p-2 rounded {{ request()->routeIs('atasan.dashboard') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
-Dashboard
-</a>
-</li>
-
-<li>
-<a href="{{ route('atasan.kegiatan.index') }}"
-class="block p-2 rounded {{ request()->routeIs('atasan.kegiatan.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
-Program / Kegiatan
-</a>
-</li>
-
-<li>
-<a href="{{ route('atasan.laporan.index') }}"
-class="block p-2 rounded {{ request()->routeIs('atasan.laporan.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
-Laporan Kegiatan
-</a>
-</li>
-
-<li>
-<a href="{{ route('atasan.evaluasi.index') }}"
-class="block p-2 rounded {{ request()->routeIs('atasan.evaluasi.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
-Evaluasi Kegiatan
-</a>
-</li>
-
-</ul>
-</aside>
 
 
 <!-- Content -->

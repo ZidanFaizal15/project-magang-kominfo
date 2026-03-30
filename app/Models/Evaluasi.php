@@ -17,11 +17,6 @@ class Evaluasi extends Model
     {
         return $this->belongsTo(ProgramKegiatan::class, 'kegiatan_id');
     }
-
-    public function laporan()
-    {
-        return $this->belongsTo(Laporan::class);
-    }
     
     public function bidang()
     {
