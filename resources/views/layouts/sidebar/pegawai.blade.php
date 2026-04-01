@@ -48,24 +48,36 @@
     {{-- BOTTOM (AUTO NEMPEL BAWAH) --}}
     <div class="mt-auto p-4 border-t border-gray-700">
 
-        <!-- PROFILE -->
-        <div class="mb-3">
-            <div class="font-semibold text-sm">
-                {{ auth()->user()->name }}
-            </div>
-            <div class="text-xs text-gray-400">
-                {{ auth()->user()->role }}
+        <!-- PROFILE INFO -->
+        <div onclick="toggleProfilePanel()" 
+            class="mb-3 flex items-center space-x-3 cursor-pointer hover:bg-gray-800 p-2 rounded transition">
+
+            <!-- FOTO -->
+            <img 
+                src="{{ auth()->user()->photo ? asset('storage/'.auth()->user()->photo) : 'https://via.placeholder.com/40' }}"
+                class="w-10 h-10 rounded-full object-cover"
+            >
+
+            <div>
+                <div class="font-semibold text-sm">
+                    {{ auth()->user()->name }}
+                </div>
+                <div class="text-xs text-gray-400">
+                    {{ auth()->user()->role }}
+                </div>
             </div>
         </div>
-
-        <!-- LOGOUT -->
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button class="w-full bg-red-500 hover:bg-red-600 transition text-white py-2 rounded text-sm">
-                Logout
-            </button>
-        </form>
 
     </div>
 
 </aside>
+
+<script>
+function toggleProfilePanel() {
+    const panel = document.getElementById('profilePanel');
+    const overlay = document.getElementById('overlay');
+
+    panel.classList.toggle('translate-x-full');
+    overlay.classList.toggle('hidden');
+}
+</script>

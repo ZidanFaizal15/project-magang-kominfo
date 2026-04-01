@@ -31,7 +31,7 @@
 
             <div class="flex flex-wrap gap-2">
                 @foreach($kegiatanSiap as $item)
-                    <a href="{{ route('atasan.evaluasi.create', $item->id) }}"
+                    <a href="{{ route('admin.evaluasi.create', $item->id) }}"
                        class="px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700">
                         {{ $item->nama_kegiatan }}
                     </a>

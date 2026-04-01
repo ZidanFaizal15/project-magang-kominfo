@@ -7,8 +7,16 @@
         </div>
 </x-slot>
 
-<div class="flex">
+    <div class="bg-white shadow rounded-xl p-6">
+        <h3 class="text-lg font-semibold text-gray-800">
+            Selamat datang, {{ auth()->user()->name }} 👋
+        </h3>
+        <p class="text-gray-500 text-sm mt-1">
+            Berikut adalah ringkasan data user, kegiatan, laporan, dan evaluasi yang ada di sistem.
+        </p>
+    </div>
 
+<div class="flex">
 
 
 <!-- Content -->
@@ -35,40 +43,6 @@
 <div class="bg-white p-6 rounded shadow border-l-4 border-purple-500">
 <h3 class="text-gray-500 text-sm">Total Evaluasi</h3>
 <p class="text-3xl font-bold">{{ $totalEvaluasi }}</p>
-</div>
-
-</div>
-
-
-<!-- Quick Action -->
-<div class="bg-white p-6 rounded shadow">
-
-<h3 class="text-lg font-semibold mb-4">
-Aksi Cepat
-</h3>
-
-<div class="flex gap-4">
-
-<a href="{{ route('admin.users.create') }}"
-class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-+ Tambah User
-</a>
-
-<a href="{{ route('admin.kegiatan.create') }}"
-class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
-+ Tambah Kegiatan
-</a>
-
-<a href="{{ route('admin.laporan.index') }}"
-class="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">
-Lihat Laporan
-</a>
-
-<a href="{{ route('admin.evaluasi.index') }}"
-class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700">
-Lihat Evaluasi
-</a>
-
 </div>
 
 </div>
