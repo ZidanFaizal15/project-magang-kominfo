@@ -16,6 +16,7 @@ class DashboardController extends Controller
         $jumlahKegiatan = ProgramKegiatan::where('bidang_id', $user->bidang_id)->count();
 
         $jumlahLaporanSaya = Laporan::where('user_id', $user->id)->count();
+        
 
         return view('pegawai.dashboard', compact(
             'jumlahKegiatan',

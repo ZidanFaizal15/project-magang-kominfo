@@ -24,6 +24,7 @@ class User extends Authenticatable
         'role',
         'bidang_id',
         'is_active',
+        'photo',
     ];
 
     /**

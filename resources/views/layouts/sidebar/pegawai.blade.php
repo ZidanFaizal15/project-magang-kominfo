@@ -7,6 +7,59 @@
             Monitoring App
         </div>
 
+        <!-- OVERLAY -->
+        <div id="overlay" onclick="toggleProfilePanel()"
+        class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div>
+
+        <!-- PROFILE PANEL -->
+        <div id="profilePanel"
+            class="fixed top-0 right-0 w-80 h-full bg-white shadow-lg transform translate-x-full transition duration-300 z-50">
+
+            <div class="p-6">
+
+                <!-- CLOSE -->
+                <button onclick="toggleProfilePanel()" class="mb-4 text-gray-500">
+                    ✕
+                </button>
+
+                <!-- FOTO BESAR -->
+                <div class="flex justify-center mb-4">
+                    <img 
+                        src="{{ auth()->user()->photo ? asset('storage/'.auth()->user()->photo) : 'https://via.placeholder.com/150' }}"
+                        class="w-24 h-24 rounded-full object-cover"
+                    >
+                </div>
+
+                <!-- INFO -->
+                <div class="text-center mb-6">
+                    <div class="font-bold text-lg">
+                        {{ auth()->user()->name }}
+                    </div>
+                    <div class="text-sm text-gray-500">
+                        {{ auth()->user()->email }}
+                    </div>
+                    <div class="text-xs text-gray-400 mt-1">
+                        {{ auth()->user()->role }}
+                    </div>
+                </div>
+
+                <!-- BUTTON EDIT -->
+                <a href="{{ route('profile.edit') }}"
+                class="block w-full text-center mb-3 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded">
+                    Edit Profile
+                </a>
+
+                <!-- LOGOUT -->
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded">
+                        Logout
+                    </button>
+                </form>
+
+            </div>
+        </div>
+
         <!-- MENU -->
         <ul class="p-4 space-y-2 text-sm">
 

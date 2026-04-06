@@ -20,11 +20,15 @@
 
     {{-- SIDEBAR DINAMIS --}}
     @auth
-        @if(auth()->user()->role == 'admin')
+        @php
+            $role = strtolower(trim(auth()->user()->role));
+        @endphp
+
+        @if($role == 'admin')
             @include('layouts.sidebar.admin')
-        @elseif(auth()->user()->role == 'pegawai')
+        @elseif($role == 'pegawai')
             @include('layouts.sidebar.pegawai')
-        @elseif(auth()->user()->role == 'atasan')
+        @elseif($role == 'atasan')
             @include('layouts.sidebar.atasan')
         @endif
     @endauth

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProfileController extends Controller
 {
@@ -42,8 +43,7 @@ class ProfileController extends Controller
                 $user->save();
             }
 
-            return Redirect::route('profile.edit')
-                ->with('status', 'profile-updated');
+            return redirect()->back()->with('status', 'profile-updated');
         }
 
         /**
@@ -53,19 +53,43 @@ class ProfileController extends Controller
          */
         $user->fill($request->validated());
 
-        // Reset verifikasi email jika berubah
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }
 
         /**
          * =========================
-         * UPLOAD FOTO BARU
+         * UPLOAD FOTO (CROPPER / BASE64)
          * =========================
          */
-        if ($request->hasFile('photo')) {
+        if ($request->photo_base64) {
 
-            // Hapus foto lama jika ada
+            // hapus foto lama
+            if ($user->photo) {
+                Storage::disk('public')->delete($user->photo);
+            }
+
+            $image = $request->photo_base64;
+
+            // hapus prefix base64
+            $image = preg_replace('/^data:image\/\w+;base64,/', '', $image);
+
+            $image = base64_decode($image);
+
+            $fileName = 'profile/' . Str::random(20) . '.jpg';
+
+            Storage::disk('public')->put($fileName, $image);
+
+            $user->photo = $fileName;
+        }
+
+        /**
+         * =========================
+         * UPLOAD FOTO BIASA (fallback)
+         * =========================
+         */
+        elseif ($request->hasFile('photo')) {
+
             if ($user->photo) {
                 Storage::disk('public')->delete($user->photo);
             }
@@ -76,8 +100,7 @@ class ProfileController extends Controller
 
         $user->save();
 
-        return Redirect::route('profile.edit')
-            ->with('status', 'profile-updated');
+        return redirect()->back()->with('status', 'profile-updated');
     }
 
     /**
