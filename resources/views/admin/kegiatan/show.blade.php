@@ -22,7 +22,7 @@
                 <p><strong>Deskripsi:</strong> {{ $kegiatan->deskripsi ?? 'Tidak ada deskripsi' }}</p>
                 <div class="bg-white p-4 rounded shadow mb-4">
 
-                    @if(auth()->user()->role == 'admin' || auth()->user()->role == 'atasan')
+                    @if(auth()->user()->role == 'admin' || auth()->user()->role == 'mentor')
 
                         @if($statusTarget == 'Tercapai')
 

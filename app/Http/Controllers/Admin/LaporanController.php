@@ -144,7 +144,7 @@ class LaporanController extends Controller
 
     public function cetak(Laporan $laporan)
     {
-        $pdf = Pdf::loadView('admin.laporan.pdf', compact('laporan'));
+        $pdf = Pdf::loadView('pdf.laporan', compact('laporan'));
         return $pdf->download('laporan-'.$laporan->id.'.pdf');
     }
 }

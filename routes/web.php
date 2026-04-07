@@ -15,20 +15,20 @@ use App\Http\Controllers\Admin\LaporanController as AdminLaporanController;
 use App\Http\Controllers\Admin\EvaluasiController as AdminEvaluasiController;
 
 /* ========================
-   PEGAWAI CONTROLLERS
+   PESERTA CONTROLLERS
 ======================== */
-use App\Http\Controllers\Pegawai\DashboardController as PegawaiDashboardController;
-use App\Http\Controllers\Pegawai\ProgramKegiatanController as PegawaiKegiatanController;
-use App\Http\Controllers\Pegawai\LaporanController as PegawaiLaporanController;
-use App\Http\Controllers\Pegawai\EvaluasiController as PegawaiEvaluasiController;
+use App\Http\Controllers\Peserta\DashboardController as PesertaDashboardController;
+use App\Http\Controllers\Peserta\ProgramKegiatanController as PesertaKegiatanController;
+use App\Http\Controllers\Peserta\LaporanController as PesertaLaporanController;
+use App\Http\Controllers\Peserta\EvaluasiController as PesertaEvaluasiController;
 
 /* ========================
-   ATASAN CONTROLLERS
+   MENTOR CONTROLLERS
 ======================== */
-use App\Http\Controllers\Atasan\DashboardController as AtasanDashboardController;
-use App\Http\Controllers\Atasan\ProgramKegiatanController as AtasanKegiatanController;
-use App\Http\Controllers\Atasan\LaporanController as AtasanLaporanController;
-use App\Http\Controllers\Atasan\EvaluasiController as AtasanEvaluasiController;
+use App\Http\Controllers\Mentor\DashboardController as MentorDashboardController;
+use App\Http\Controllers\Mentor\ProgramKegiatanController as MentorKegiatanController;
+use App\Http\Controllers\Mentor\LaporanController as MentorLaporanController;
+use App\Http\Controllers\Mentor\EvaluasiController as MentorEvaluasiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,8 +52,8 @@ Route::get('/dashboard', function () {
 
     return match ($user->role) {
         'admin'   => redirect()->route('admin.dashboard'),
-        'pegawai' => redirect()->route('pegawai.dashboard'),
-        'atasan'  => redirect()->route('atasan.dashboard'),
+        'peserta' => redirect()->route('peserta.dashboard'),
+        'mentor'  => redirect()->route('mentor.dashboard'),
         default   => abort(403),
     };
 
@@ -80,7 +80,7 @@ Route::middleware('auth')->group(function () {
 */
 
 Route::prefix('admin')
-->middleware(['auth','role:admin'])
+->middleware(['auth', 'active', 'role:admin'])
 ->name('admin.')
 ->group(function () {
 
@@ -129,34 +129,34 @@ Route::prefix('admin')
 
 /*
 |--------------------------------------------------------------------------
-| PEGAWAI ROUTES
+| PESERTA ROUTES
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth','role:pegawai'])
-    ->prefix('pegawai')
-    ->name('pegawai.')
+Route::middleware(['auth', 'active', 'role:peserta'])
+    ->prefix('peserta')
+    ->name('peserta.')
     ->group(function () {
 
-    Route::get('/dashboard', [PegawaiDashboardController::class,'index'])
+    Route::get('/dashboard', [PesertaDashboardController::class,'index'])
         ->name('dashboard');
 
     // KEGIATAN
-    Route::resource('kegiatan', PegawaiKegiatanController::class)
+    Route::resource('kegiatan', PesertaKegiatanController::class)
         ->only(['index','show']);
 
     // LAPORAN
-    Route::resource('laporan', PegawaiLaporanController::class)
+    Route::resource('laporan', PesertaLaporanController::class)
         ->only(['index','create','store','show', 'edit', 'update', 'destroy']);
 
-    Route::get('/laporan/{laporan}/cetak', [PegawaiLaporanController::class, 'cetak'])
+    Route::get('/laporan/{laporan}/cetak', [PesertaLaporanController::class, 'cetak'])
         ->name('laporan.cetak');
 
     // EVALUASI
-    Route::resource('evaluasi', PegawaiEvaluasiController::class)
+    Route::resource('evaluasi', PesertaEvaluasiController::class)
         ->only(['index','show']);
     
     Route::get('evaluasi/{evaluasi}/pdf',
-        [PegawaiEvaluasiController::class,'pdf']
+        [PesertaEvaluasiController::class,'pdf']
     )->name('evaluasi.pdf');
 
 });
@@ -164,40 +164,40 @@ Route::middleware(['auth','role:pegawai'])
 
 /*
 |--------------------------------------------------------------------------
-| ATASAN ROUTES
+| MENTOR ROUTES
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('atasan')
-->middleware(['auth','role:atasan'])
-->name('atasan.')
+Route::prefix('mentor')
+->middleware(['auth', 'active', 'role:mentor'])
+->name('mentor.')
 ->group(function () {
 
     /* DASHBOARD */
     Route::get('/dashboard',
-        [AtasanDashboardController::class,'index']
+        [MentorDashboardController::class,'index']
     )->name('dashboard');
 
     /* KEGIATAN */
-    Route::resource('kegiatan', AtasanKegiatanController::class);
+    Route::resource('kegiatan', MentorKegiatanController::class);
     Route::get('kegiatan/{kegiatan}/cetak',
-        [AtasanKegiatanController::class,'cetak']
+        [MentorKegiatanController::class,'cetak']
     )->name('kegiatan.cetak');
 
     /* LAPORAN */
-    Route::resource('laporan', AtasanLaporanController::class)
+    Route::resource('laporan', MentorLaporanController::class)
         ->only(['index','show','destroy']);
-    Route::get('laporan/{laporan}/cetak',[AtasanLaporanController::class,'cetak']
+    Route::get('laporan/{laporan}/cetak',[MentorLaporanController::class,'cetak']
     )->name('laporan.cetak');
 
     /* EVALUASI */
-    Route::resource('evaluasi', AtasanEvaluasiController::class)
+    Route::resource('evaluasi', MentorEvaluasiController::class)
         ->except(['destroy','create']);
     Route::get('evaluasi/create/{kegiatan}',
-        [AtasanEvaluasiController::class,'create']
+        [MentorEvaluasiController::class,'create']
     )->name('evaluasi.create');
     Route::get('evaluasi/{evaluasi}/pdf',
-        [AtasanEvaluasiController::class,'pdf']
+        [MentorEvaluasiController::class,'pdf']
     )->name('evaluasi.pdf');
 
 });

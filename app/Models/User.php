@@ -55,14 +55,14 @@ class User extends Authenticatable
         return $this->role === 'admin';
     }
 
-    public function isAtasan()
+    public function isMentor()
     {
-        return $this->role === 'atasan';
+        return $this->role === 'mentor';
     }
 
-    public function isPegawai()
+    public function isPeserta()
     {
-        return $this->role === 'pegawai';
+        return $this->role === 'peserta';
     }
     
     public function bidang()

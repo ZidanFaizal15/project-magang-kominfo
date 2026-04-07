@@ -12,6 +12,7 @@ class BidangSeeder extends Seeder
         Bidang::query()->delete();
 
         Bidang::create(['nama_bidang' => 'TIK']);
+        Bidang::create(['nama_bidang' => 'IKP']);
         Bidang::create(['nama_bidang' => 'Sekretariat']);
     }
 }

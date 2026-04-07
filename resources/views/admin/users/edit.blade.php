@@ -43,8 +43,8 @@
                         <label class="block font-medium">Role</label>
                         <select name="role" class="border p-2 rounded w-full">
                             <option value="admin" @selected($user->role=='admin')>Admin</option>
-                            <option value="pegawai" @selected($user->role=='pegawai')>Pegawai</option>
-                            <option value="atasan" @selected($user->role=='atasan')>Atasan</option>
+                            <option value="peserta" @selected($user->role=='peserta')>Peserta</option>
+                            <option value="mentor" @selected($user->role=='mentor')>Mentor</option>
                         </select>
                     </div>
 

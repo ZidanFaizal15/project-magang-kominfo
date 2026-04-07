@@ -64,7 +64,7 @@ class ProgramKegiatanController extends Controller
             'nama_kegiatan'    => $request->nama_kegiatan,
             'jenis_kegiatan'   => $request->jenis_kegiatan,
             'tanggal_kegiatan' => $request->tanggal_kegiatan,
-            'status'           => $request->status,
+            'status'           => 'Proses',
             'bidang_id'        => $bidangId, // 🔥 WAJIB ADA
             'deskripsi'        => $request->deskripsi,
             'target_laporan'   => $request->target_laporan, 
@@ -80,8 +80,9 @@ class ProgramKegiatanController extends Controller
 
         // Hitung jumlah user unik yang sudah melapor
         $jumlahUserMelapor = $kegiatan->laporans()
-            ->distinct('user_id')
-            ->count('user_id');
+            ->select('user_id')
+            ->distinct()
+            ->count();
 
         $target = $kegiatan->target_laporan ?? 0;
 
@@ -143,7 +144,7 @@ class ProgramKegiatanController extends Controller
     {
         $kegiatan = ProgramKegiatan::with('bidang')->findOrFail($id);
 
-        $pdf = Pdf::loadView('admin.kegiatan.pdf', compact('kegiatan'));
+        $pdf = Pdf::loadView('pdf.kegiatan', compact('kegiatan'));
 
         return $pdf->download('program-kegiatan-'.$kegiatan->nama_kegiatan.'.pdf');
     }

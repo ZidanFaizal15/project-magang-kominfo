@@ -113,7 +113,7 @@
                                    Detail
                                 </a>
 
-                                @if(auth()->user()->role == 'admin' || auth()->user()->role == 'atasan')
+                                @if(auth()->user()->role == 'admin' || auth()->user()->role == 'mentor')
 
                                 <a href="{{ route('admin.evaluasi.edit', $evaluasi->id) }}"
                                    class="px-3 py-1 bg-yellow-500 text-white rounded text-sm">

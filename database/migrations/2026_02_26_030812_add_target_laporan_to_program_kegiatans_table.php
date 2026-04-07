@@ -9,11 +9,14 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+
     public function up(): void
     {
-        Schema::table('program_kegiatans', function (Blueprint $table) {
-            $table->integer('target_laporan')->nullable();
-        });
+        if (!Schema::hasColumn('program_kegiatans', 'target_laporan')) {
+            Schema::table('program_kegiatans', function (Blueprint $table) {
+                $table->integer('target_laporan')->nullable();
+            });
+        }
     }
 
     /**
@@ -21,8 +24,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('program_kegiatans', function (Blueprint $table) {
-            //
-        });
+        if (Schema::hasColumn('program_kegiatans', 'target_laporan')) {
+            Schema::table('program_kegiatans', function (Blueprint $table) {
+                $table->dropColumn('target_laporan');
+            });
+        }
     }
 };

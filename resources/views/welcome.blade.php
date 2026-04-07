@@ -64,9 +64,9 @@
             </h1>
 
             <p class="text-white/80 text-lg">
-                Selamat datang di sistem monitoring dan evaluasi kegiatan.
-                Kelola program, laporan, dan evaluasi dengan lebih mudah,
-                cepat, dan terstruktur dalam satu platform modern.
+                Selamat datang di sistem monitoring dan evaluasi kegiatan magang.
+                Pantau kegiatan magangmu, buat laporan, dan dapatkan hasil evualuasi
+                dengan mudah dan cepat.
             </p>
         </div>
 

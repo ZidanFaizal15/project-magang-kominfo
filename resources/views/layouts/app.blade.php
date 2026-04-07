@@ -17,7 +17,7 @@
 
 <body class="font-sans antialiased">
 <div class="min-h-screen flex bg-gray-100">
-
+<script src="https://unpkg.com/lucide@latest"></script>
     {{-- SIDEBAR DINAMIS --}}
     @auth
         @php
@@ -26,10 +26,10 @@
 
         @if($role == 'admin')
             @include('layouts.sidebar.admin')
-        @elseif($role == 'pegawai')
-            @include('layouts.sidebar.pegawai')
-        @elseif($role == 'atasan')
-            @include('layouts.sidebar.atasan')
+        @elseif($role == 'peserta')
+            @include('layouts.sidebar.peserta')
+        @elseif($role == 'mentor')
+            @include('layouts.sidebar.mentor')
         @endif
     @endauth
 

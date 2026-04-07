@@ -67,8 +67,8 @@
                 class="block mt-1 w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                 required>
                 <option value="">-- Pilih Role --</option>
-                <option value="pegawai">Pegawai</option>
-                <option value="atasan">Atasan</option>
+                <option value="peserta">Peserta</option>
+                <option value="mentor">Mentor</option>
             </select>
 
             <x-input-error :messages="$errors->get('role')" class="mt-2" />

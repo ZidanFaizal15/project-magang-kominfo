@@ -60,40 +60,54 @@
         </div>
 
         <!-- MENU -->
-        <ul class="p-4 space-y-2 text-sm">
+            <ul class="p-4 space-y-2 text-sm">
 
                 <li>
                     <a href="{{ route('admin.dashboard') }}"
-                       class="block p-2 rounded {{ request()->routeIs('admin.dashboard') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
+                    class="flex items-center gap-2 p-2 rounded {{ request()->routeIs('admin.dashboard') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
+                        
+                        <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
                         Dashboard
                     </a>
                 </li>
+
                 <li>
                     <a href="{{ route('admin.users.index') }}"
-                       class="block p-2 rounded {{ request()->routeIs('admin.users.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
+                    class="flex items-center gap-2 p-2 rounded {{ request()->routeIs('admin.users.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
+                        
+                        <i data-lucide="users" class="w-4 h-4"></i>
                         Manajemen User
                     </a>
                 </li>
+
                 <li>
                     <a href="{{ route('admin.kegiatan.index') }}"
-                       class="block p-2 rounded {{ request()->routeIs('admin.kegiatan.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
+                    class="flex items-center gap-2 p-2 rounded {{ request()->routeIs('admin.kegiatan.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
+                        
+                        <i data-lucide="clipboard-list" class="w-4 h-4"></i>
                         Program / Kegiatan
                     </a>
                 </li>
+
                 <li>
                     <a href="{{ route('admin.laporan.index') }}"
-                    class="block p-2 rounded {{ request()->routeIs('admin.laporan.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
-                        Laporkan Kegiatan
+                    class="flex items-center gap-2 p-2 rounded {{ request()->routeIs('admin.laporan.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
+                        
+                        <i data-lucide="file-text" class="w-4 h-4"></i>
+                        Laporan Kegiatan
                     </a>
                 </li>
+
                 <li>
                     <a href="{{ route('admin.evaluasi.index') }}"
-                       class="block p-2 rounded {{ request()->routeIs('admin.evaluasi.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
+                    class="flex items-center gap-2 p-2 rounded {{ request()->routeIs('admin.evaluasi.*') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
+                        
+                        <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
                         Evaluasi Kegiatan
                     </a>
                 </li>
 
-        </ul>
+            </ul>
     </div>
 
     {{-- BOTTOM (AUTO NEMPEL BAWAH) --}}
@@ -124,11 +138,12 @@
 </aside>
 
 <script>
-function toggleProfilePanel() {
-    const panel = document.getElementById('profilePanel');
-    const overlay = document.getElementById('overlay');
+    lucide.createIcons();
+    function toggleProfilePanel() {
+        const panel = document.getElementById('profilePanel');
+        const overlay = document.getElementById('overlay');
 
-    panel.classList.toggle('translate-x-full');
-    overlay.classList.toggle('hidden');
-}
+        panel.classList.toggle('translate-x-full');
+        overlay.classList.toggle('hidden');
+    }
 </script>

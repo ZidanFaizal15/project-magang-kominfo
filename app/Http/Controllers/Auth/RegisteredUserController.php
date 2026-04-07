@@ -36,7 +36,7 @@ class RegisteredUserController extends Controller
             'name' => ['required','string','max:255'],
             'email' => ['required','string','lowercase','email','max:255','unique:users'],
             'password' => ['required','confirmed', Rules\Password::defaults()],
-            'role' => ['required','in:pegawai,atasan'],
+            'role' => ['required','in:peserta,mentor'],
             'bidang_id' => ['required','exists:bidangs,id'],
         ]);
 
@@ -46,7 +46,7 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
             'role' => $request->role,
             'bidang_id' => $request->bidang_id,
-            'is_active' => false
+            'is_active' => 1
         ]);
 
         event(new Registered($user));

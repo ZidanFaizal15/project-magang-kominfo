@@ -41,8 +41,8 @@ class="w-full border rounded p-2">
 <div class="mb-4">
 <label class="block mb-1">Role</label>
 <select name="role" class="w-full border rounded p-2">
-<option value="pegawai">Pegawai</option>
-<option value="atasan">Atasan</option>
+<option value="peserta">Peserta</option>
+<option value="mentor">Mentor</option>
 <option value="admin">Admin</option>
 </select>
 </div>

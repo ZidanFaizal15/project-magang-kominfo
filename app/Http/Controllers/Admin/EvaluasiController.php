@@ -46,9 +46,14 @@ class EvaluasiController extends Controller
         }
 
         $kegiatanSiap = $kegiatanSiap->filter(function ($item) {
-            return $item->laporans()
-                ->distinct('user_id')
-                ->count('user_id') >= $item->target_laporan;
+        $target = $item->target_laporan ?? 0;
+
+        $jumlahUser = $item->laporans()
+            ->select('user_id')
+            ->distinct()
+            ->count();
+
+        return $jumlahUser >= $target;
         });
 
         return view('admin.evaluasi.index', compact('evaluasis', 'kegiatanSiap'));
@@ -65,7 +70,7 @@ class EvaluasiController extends Controller
             abort(403);
         }
 
-        if (!in_array($user->role, ['admin', 'atasan'])) {
+        if (!in_array($user->role, ['admin', 'mentor'])) {
             abort(403);
         }
 
@@ -73,9 +78,10 @@ class EvaluasiController extends Controller
             abort(403);
         }
 
-        $jumlahUserMelapor = $kegiatan->laporans()
-            ->distinct('user_id')
-            ->count('user_id');
+            $jumlahUserMelapor = $kegiatan->laporans()
+                ->select('user_id')
+                ->distinct()
+                ->count();
 
         if ($jumlahUserMelapor < $kegiatan->target_laporan) {
             return redirect()->back()
@@ -102,8 +108,9 @@ class EvaluasiController extends Controller
         $kegiatan = ProgramKegiatan::findOrFail($request->kegiatan_id);
 
         $jumlahUserMelapor = $kegiatan->laporans()
-            ->distinct('user_id')
-            ->count('user_id');
+            ->select('user_id')
+            ->distinct()
+            ->count();
 
         $status = $jumlahUserMelapor >= $kegiatan->target_laporan
             ? 'Tercapai'
@@ -119,7 +126,7 @@ class EvaluasiController extends Controller
 
         // Optional: ubah status kegiatan jadi Selesai
         $kegiatan->update([
-            'status' => 'Selesai'
+            'status' => $status === 'Tercapai' ? 'Selesai' : 'Proses'
         ]);
 
         return redirect()->route('admin.kegiatan.show', $kegiatan->id)
@@ -150,7 +157,7 @@ class EvaluasiController extends Controller
     {
         $user = Auth::user();
 
-        if (!in_array($user->role, ['admin', 'atasan'])) {
+        if (!in_array($user->role, ['admin', 'mentor'])) {
             abort(403);
         }
 
@@ -169,7 +176,7 @@ class EvaluasiController extends Controller
     {
         $user = auth()->user();
 
-        if (!in_array($user->role, ['admin', 'atasan'])) {
+        if (!in_array($user->role, ['admin', 'mentor'])) {
             abort(403);
         }
 
@@ -202,7 +209,7 @@ class EvaluasiController extends Controller
             abort(403);
         }
 
-        $pdf = Pdf::loadView('admin.evaluasi.pdf', compact('evaluasi'));
+        $pdf = Pdf::loadView('pdf.evaluasi', compact('evaluasi'));
 
         return $pdf->download('evaluasi-'.$evaluasi->id.'.pdf');
     }

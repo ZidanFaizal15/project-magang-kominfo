@@ -21,7 +21,7 @@
                     {{ $evaluasi->kegiatan->bidang->nama_bidang ?? '-' }}
                 </p>
 
-                <form method="POST" action="{{ route('atasan.evaluasi.update', $evaluasi) }}">
+                <form method="POST" action="{{ route('mentor.evaluasi.update', $evaluasi) }}">
                     @csrf
                     @method('PUT')
 
@@ -62,7 +62,7 @@
                             Update
                         </button>
 
-                        <a href="{{ route('atasan.evaluasi.index') }}"
+                        <a href="{{ route('mentor.evaluasi.index') }}"
                             class="px-4 py-2 bg-gray-600 text-white rounded">
                             Kembali
                         </a>

@@ -64,14 +64,12 @@
                     <div>
                         <label class="block font-medium">Status</label>
                         <select name="status" class="w-full border rounded p-2" required>
-                            <option value="">-- Pilih Status --</option>
-                            <option value="Proses">Proses</option>
-                            <option value="Selesai">Selesai</option>
+                            <option value="Proses" selected>Proses</option>
                         </select>
 
                     </div>
 
-                                        <div class="mb-4">
+                    <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700">
                             Target Laporan
                         </label>
