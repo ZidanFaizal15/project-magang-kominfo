@@ -123,20 +123,30 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $rules = [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
             'role' => 'required|in:admin,mentor,peserta',
-            'bidang_id' => 'nullable|exists:bidangs,id',
-        ]);
+        ];
+
+        // 🔥 VALIDASI DINAMIS
+        if ($request->role !== 'admin') {
+            $rules['bidang_id'] = 'required|exists:bidangs,id';
+        } else {
+            $rules['bidang_id'] = 'nullable';
+        }
+
+        $request->validate($rules);
 
         User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
-            'bidang_id' => $request->bidang_id,
+            'bidang_id' => $request->role === 'admin'
+                ? null
+                : $request->bidang_id,
             'is_active' => true
         ]);
 

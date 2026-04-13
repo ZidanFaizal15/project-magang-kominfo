@@ -22,7 +22,7 @@
             </div>
         @endif
 
-                {{-- 🔥 KEGIATAN SIAP DIEVALUASI --}}
+        {{-- 🔥 KEGIATAN SIAP DIEVALUASI --}}
         @if($kegiatanSiap->count())
         <div class="bg-white p-4 rounded shadow">
             <h3 class="font-semibold mb-3">

@@ -49,15 +49,9 @@
                     </div>
 
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700">
-                            Bidang
-                        </label>
-
-                        <select name="bidang_id"
-                                class="mt-1 block w-full border-gray-300 rounded-md">
-
+                        <label class="block font-medium">Bidang</label>
+                        <select name="bidang_id"class="border p-2 rounded w-full">
                             <option value="">-- Pilih Bidang --</option>
-
                             @foreach($bidangs as $bidang)
                                 <option value="{{ $bidang->id }}"
                                     {{ $user->bidang_id == $bidang->id ? 'selected' : '' }}>

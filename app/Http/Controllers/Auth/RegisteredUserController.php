@@ -36,7 +36,6 @@ class RegisteredUserController extends Controller
             'name' => ['required','string','max:255'],
             'email' => ['required','string','lowercase','email','max:255','unique:users'],
             'password' => ['required','confirmed', Rules\Password::defaults()],
-            'role' => ['required','in:peserta,mentor'],
             'bidang_id' => ['required','exists:bidangs,id'],
         ]);
 
@@ -44,7 +43,7 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => $request->role,
+            'role' => 'peserta', // 🔥 FIX: otomatis peserta
             'bidang_id' => $request->bidang_id,
             'is_active' => 1
         ]);

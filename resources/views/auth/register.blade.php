@@ -59,21 +59,6 @@
             <x-input-error :messages="$errors->get('bidang_id')" class="mt-2" />
         </div>
 
-        <!-- ROLE -->
-        <div class="mt-4">
-            <x-input-label for="role" value="Role" />
-
-            <select id="role" name="role"
-                class="block mt-1 w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                required>
-                <option value="">-- Pilih Role --</option>
-                <option value="peserta">Peserta</option>
-                <option value="mentor">Mentor</option>
-            </select>
-
-            <x-input-error :messages="$errors->get('role')" class="mt-2" />
-        </div>
-
         <!-- PASSWORD -->
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />
